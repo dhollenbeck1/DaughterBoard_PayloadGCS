@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<mavlink>
+	<enums>
+	</enums>
+	<messages>
+		<message id="150" name="WIND_SENSOR">
+			<description>This message encodes all of the wind sensor data from the daughter board.</description>
+			<field type="uint16_t" name="angle">The angle from the wind (in degrees).</field>
+			<field type="float" name="wind_speed">The speed of the wind for the specified angle (in m/s).</field>
+			<field type="uint8_t" name="status">Status of the wind sensor. 0 indicates on and 0xFF indicates off.</field>
+		</message>
+		<message id="151" name="LIDAR">
+			<description>This message encodes all of the lidar data from the daughter board.</description>
+			<field type="uint16_t" name="distance">The distance measured by the Lidar (in cm).</field>
+			<field type="uint8_t" name="status">Status of the Lidar. 0 indicates on and 0xFF indicates off.</field>
+		</message>
+		<message id="152" name="PYRANOMETER">
+			<description>This message encodes all of the pyranometer data from the daughter board.</description>
+			<field type="uint32_t" name="solarIrradiance">The solar iradiance measured by the Pyranometer (in W.m-2).</field>
+			<field type="uint8_t" name="status">Status of the Pyranometer. 0 indicates on and 0xFF indicates off.</field>
+		</message>
+	</messages>
+</mavlink>
