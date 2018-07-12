@@ -173,7 +173,7 @@ void RealTimePlots::createLogFile() {
     filename += ".csv";
     dataLogFile = new QFile( filename );
 
-    // Trying to open in WriteOnly and Text mode
+    // Trying to open in WriteOnly
     if( !dataLogFile->open( QFile::WriteOnly ) )
     {
         qDebug() << " Could not open file for writing";
