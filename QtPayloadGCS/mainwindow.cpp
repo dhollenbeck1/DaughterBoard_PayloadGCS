@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setGeometry(100, 100, 1250, 750);
 
     realTimePlots = new RealTimePlots( ui );
-    recordedPlot = new RecordedPlot( this );
+    recordedPlot = new RecordedPlot( this, ui );
 
     // Connect buttons start and stop record for "real time" tab
     connect( ui->lidarStartButton, SIGNAL( clicked() ), realTimePlots, SLOT( lidarStart() ) );
@@ -19,8 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect( ui->startRecordButton, SIGNAL( clicked() ), realTimePlots, SLOT( startRecording() ) );
     connect( ui->stopRecordButton, SIGNAL( clicked() ), realTimePlots, SLOT( stopRecording() ) );
 
-    // Connect load file button for "recorded" tab
-    connect( ui->loadFileButton, SIGNAL( clicked()), recordedPlot, SLOT( loadFromFile() ) );
+    // Connect load file button and plot buttons for "recorded" tab
+    connect( ui->loadFileButton, SIGNAL( clicked() ), recordedPlot, SLOT( loadFromFile() ) );
+    connect( ui->lidarPlotButton, SIGNAL( clicked() ), recordedPlot, SLOT( plotLidar() ) );
+    connect( ui->windPlotButton, SIGNAL( clicked() ), recordedPlot, SLOT( plotWind() ) );
+    connect( ui->pyranometerPlotButton, SIGNAL( clicked() ), recordedPlot, SLOT( plotPyranometer() ) );
 }
 
 MainWindow::~MainWindow()

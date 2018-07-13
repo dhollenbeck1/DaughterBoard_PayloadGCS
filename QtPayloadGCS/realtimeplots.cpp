@@ -137,7 +137,7 @@ void RealTimePlots::dataSlot()
           ui->lidarPlot->replot();
           ui->lidarLcd->display( distance );
           if( recordAll | recordLidar )
-              *out << "LI," << distance << endl;
+              *out << "LI," << key << "," << distance << endl;
           lastPointKey = key;
         break;
         case MAVLINK_MSG_ID_WIND_SENSOR:
@@ -156,7 +156,7 @@ void RealTimePlots::dataSlot()
           ui->pyranometerPlot->replot();
           ui->pyranometerLcd->display(solarIrradiance );
           if( recordAll | recordPyranometer )
-              *out << "PY," << solarIrradiance << endl;
+              *out << "PY," << key << "," << solarIrradiance << endl;
 
           lastPointKey = key;
         break;
@@ -186,3 +186,4 @@ void RealTimePlots::closeLogFile() {
     dataLogFile->flush();
     dataLogFile->close();
 }
+

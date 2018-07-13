@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="realTimeTab">
      <attribute name="title">
@@ -292,7 +292,7 @@
      <attribute name="title">
       <string>Recorded Plot</string>
      </attribute>
-     <widget class="QFrame" name="frame_5">
+     <widget class="QFrame" name="recordFrame">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -311,7 +311,7 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>160</y>
+         <y>20</y>
          <width>111</width>
          <height>24</height>
         </rect>
@@ -320,8 +320,155 @@
         <string>Load ...</string>
        </property>
       </widget>
+      <widget class="QGroupBox" name="lidarGroupBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>120</width>
+         <height>130</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Lidar</string>
+       </property>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>111</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>nb points:</string>
+        </property>
+       </widget>
+       <widget class="QLCDNumber" name="lidarNbPts">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>64</width>
+          <height>23</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="lidarPlotButton">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>90</y>
+          <width>51</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Plot</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="windGroupBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>210</y>
+         <width>120</width>
+         <height>130</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Wind sensor</string>
+       </property>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>111</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>nb points:</string>
+        </property>
+       </widget>
+       <widget class="QLCDNumber" name="windNbPts">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>64</width>
+          <height>23</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="windPlotButton">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>90</y>
+          <width>51</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Plot</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="pyranometerGroupBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>360</y>
+         <width>120</width>
+         <height>130</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Pyranometer</string>
+       </property>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>111</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>nb points:</string>
+        </property>
+       </widget>
+       <widget class="QLCDNumber" name="pyranometerNbPts">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>64</width>
+          <height>23</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pyranometerPlotButton">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>90</y>
+          <width>51</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Plot</string>
+        </property>
+       </widget>
+      </widget>
      </widget>
-     <widget class="QCustomPlot" name="loadedPlot" native="true">
+     <widget class="QCustomPlot" name="recordPlot" native="true">
       <property name="geometry">
        <rect>
         <x>170</x>
@@ -331,8 +478,8 @@
        </rect>
       </property>
      </widget>
-     <zorder>loadedPlot</zorder>
-     <zorder>frame_5</zorder>
+     <zorder>recordPlot</zorder>
+     <zorder>recordFrame</zorder>
     </widget>
    </widget>
   </widget>
