@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="realTimeTab">
      <attribute name="title">
@@ -111,48 +111,6 @@
        </property>
       </widget>
      </widget>
-     <widget class="QCustomPlot" name="OPLSPlot" native="true">
-      <property name="geometry">
-       <rect>
-        <x>790</x>
-        <y>380</y>
-        <width>361</width>
-        <height>261</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_3">
-      <property name="geometry">
-       <rect>
-        <x>629</x>
-        <y>99</y>
-        <width>151</width>
-        <height>261</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-     <widget class="QFrame" name="frame_4">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>380</y>
-        <width>151</width>
-        <height>261</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
      <widget class="QCustomPlot" name="lidarPlot" native="true">
       <property name="geometry">
        <rect>
@@ -160,16 +118,6 @@
         <y>100</y>
         <width>430</width>
         <height>260</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QCustomPlot" name="windPlot" native="true">
-      <property name="geometry">
-       <rect>
-        <x>790</x>
-        <y>100</y>
-        <width>361</width>
-        <height>261</height>
        </rect>
       </property>
      </widget>

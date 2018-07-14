@@ -6,8 +6,8 @@ RecordedPlot::RecordedPlot()
 {
 }
 
-RecordedPlot::RecordedPlot( QMainWindow *_mainWindow, Ui::MainWindow *ui ) :
-    mainWindow( _mainWindow ), ui( ui )
+RecordedPlot::RecordedPlot( QMainWindow *_mainWindow, Ui::MainWindow *_ui ) :
+    mainWindow( _mainWindow ), ui( _ui )
 {
     config();
 }
