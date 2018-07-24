@@ -11,6 +11,7 @@ int main(int argc, char **argv)
 	i2cLidar lidar;
 	LidarMsgQueue msgQueue;
 	
+	usleep( 1000000 );	
 	while( 1 ) {
 		lidar.measure();
 		msgQueue.setDistance( lidar.getDistance() );

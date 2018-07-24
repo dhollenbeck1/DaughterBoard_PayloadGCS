@@ -8,29 +8,45 @@ using namespace std;
 class WindMsgQueue {
 
 public:
-	const long MSG_TYPE = 1;
+	const long DATA_MSG_TYPE   = 1;
+	const long CONFIG_MSG_TYPE = 2;
 	
 	WindMsgQueue();
-	~WindMsgQueue() ;
-	int send();
-	int receive();
+	~WindMsgQueue();
+	int sendData();
+	int receiveData();
+	int sendConfig();
+	int receiveConfig();
 	void setAngle( uint16_t _angle );
-	void setSpeed( float speed );
+	void setSpeed( float _speed );
+	void setTemperature( float _temperature );
+	void setSensorType( uint8_t __stype );
 	
 	uint16_t getAngle();
 	float getSpeed();
+	float getTemperature();
+	uint8_t getSensorType();
 	
 private:
 	key_t key;
 	int msgid;
-	struct _message {
+	
+	struct _dataMessage {
 		long type;
 		uint16_t angle;
 		float speed;
-	} message;
-	int length;
+		float temperature;
+	} dataMessage;
+	
+	int dataMsgLength;
+	
+	struct _configMessage {
+		long type;
+		uint8_t stype;
+	} configMessage;
+	
+	int configMsgLength;
 };
-
 
 WindMsgQueue::WindMsgQueue() {
 	//key = ftok( "progfile", 65 );
@@ -39,10 +55,13 @@ WindMsgQueue::WindMsgQueue() {
 		perror( "msgget" );
 		cout << "msgget error" << endl;
 	}
-	message.type = MSG_TYPE;
-	message.angle = 0;
-	message.speed = 0.0;
-	length = sizeof( message ) - sizeof( long );
+	dataMessage.type    = DATA_MSG_TYPE;
+	dataMessage.angle   = 0;
+	dataMessage.speed   = 0.0;
+	configMessage.type  = CONFIG_MSG_TYPE;
+	configMessage.stype = FT205;
+	dataMsgLength = sizeof( dataMessage ) - sizeof( long );
+	configMsgLength = sizeof( configMessage ) - sizeof( long );
 }
 
 WindMsgQueue::~WindMsgQueue() {
@@ -50,15 +69,30 @@ WindMsgQueue::~WindMsgQueue() {
 }
 
 
-int WindMsgQueue::send() {
-	if( msgsnd( msgid, &message, length, IPC_NOWAIT ) == -1 )
+int WindMsgQueue::sendData() {
+	if( msgsnd( msgid, &dataMessage, dataMsgLength, IPC_NOWAIT ) == -1 )
 		return SND_FAILURE;
 	else 
 		return SND_SUCCESS;
 }
 
-int WindMsgQueue::receive() {
-	if( msgrcv( msgid, &message, length, MSG_TYPE, IPC_NOWAIT ) == -1 ) {
+int WindMsgQueue::receiveData() {
+	if( msgrcv( msgid, &dataMessage, dataMsgLength, DATA_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
+		return RCV_FAILURE;
+	}else {
+		return RCV_SUCCESS;
+	}
+}
+
+int WindMsgQueue::sendConfig() {
+	if( msgsnd( msgid, &configMessage, configMsgLength, IPC_NOWAIT ) == -1 )
+		return SND_FAILURE;
+	else 
+		return SND_SUCCESS;
+}
+
+int WindMsgQueue::receiveConfig() {
+	if( msgrcv( msgid, &configMessage, configMsgLength, CONFIG_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
 		return RCV_FAILURE;
 	}else {
 		return RCV_SUCCESS;
@@ -66,17 +100,32 @@ int WindMsgQueue::receive() {
 }
 
 void WindMsgQueue::setAngle( uint16_t _angle ) {
-	message.angle = _angle;
+	dataMessage.angle = _angle;
 }
 
 void WindMsgQueue::setSpeed( float _speed ) {
-	message.speed = _speed;
+	dataMessage.speed = _speed;
+}
+void WindMsgQueue::setTemperature( float _temperature ) {
+	dataMessage.temperature = _temperature;
+}
+
+void WindMsgQueue::setSensorType( uint8_t _stype ) {
+	configMessage.stype = _stype;
 }
 
 uint16_t WindMsgQueue::getAngle() {
-	return message.angle;
+	return dataMessage.angle;
 }
 
 float WindMsgQueue::getSpeed() {
-	return message.speed;
+	return dataMessage.speed;
+}
+
+float WindMsgQueue::getTemperature() {
+	return dataMessage.temperature;
+}
+
+uint8_t WindMsgQueue::getSensorType() {
+	return configMessage.stype;
 }

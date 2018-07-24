@@ -1,19 +1,21 @@
 #include "WindSensor.h"
-#include "../SharedInclude/WindMsgQueue.h"
 #include <unistd.h>
 
 int main( int argc, char **argv ){
 
 	WindSensor windSensor;
-	WindMsgQueue msgQueue;
+	windSensor.waitForConfig();
 	windSensor.init();
-		
+	
+	usleep( 1000000 );
 	while( 1 ){
 		windSensor.sense();
-		msgQueue.setAngle( windSensor.getAngle() );
-		msgQueue.setSpeed( windSensor.getWindSpeed() );
-		cout << windSensor.getAngle() << " " << windSensor.getWindSpeed() << endl;
-		msgQueue.send();
+		windSensor.msgQueue.setAngle( windSensor.getAngle() );
+		windSensor.msgQueue.setSpeed( windSensor.getWindSpeed() );
+		windSensor.msgQueue.setTemperature( windSensor.getTemperature() );
+		cout << windSensor.getAngle() << " " << windSensor.getWindSpeed() 
+			 << " " << windSensor.getTemperature() << endl;
+		windSensor.msgQueue.sendData();
 	}
 
 	return EXIT_SUCCESS;

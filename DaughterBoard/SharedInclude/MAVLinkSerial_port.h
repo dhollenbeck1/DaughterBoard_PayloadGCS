@@ -7,7 +7,7 @@ class MAVLinkSerial_Port : public Serial_Port {
 public:
 	MAVLinkSerial_Port( const char* _uart_name , int _baudrate );
 	
-	int read_message(mavlink_message_t &message);
+	int read_message(mavlink_message_t* message);
 	int write_message(mavlink_message_t* message);
 
 private:
@@ -22,7 +22,7 @@ MAVLinkSerial_Port::MAVLinkSerial_Port( const char* _uart_name , int _baudrate )
 	baudrate  = _baudrate;
 }
 
-int MAVLinkSerial_Port::read_message(mavlink_message_t &message)
+int MAVLinkSerial_Port::read_message(mavlink_message_t* message)
 {
 	char          cp;
 	mavlink_status_t status;
@@ -42,7 +42,7 @@ int MAVLinkSerial_Port::read_message(mavlink_message_t &message)
 	if (result > 0)
 	{
 		// the parsing
-		msgReceived = mavlink_parse_char(MAVLINK_COMM_1, cp, &message, &status);
+		msgReceived = mavlink_parse_char(MAVLINK_COMM_1, cp, message, &status);
 
 		// check for dropped packets
 		if ( (lastStatus.packet_rx_drop_count != status.packet_rx_drop_count) && debug )
@@ -66,14 +66,14 @@ int MAVLinkSerial_Port::read_message(mavlink_message_t &message)
 	if(msgReceived && debug)
 	{
 		// Report info
-		printf("Received message from serial with ID #%d (sys:%d|comp:%d):\n", message.msgid, message.sysid, message.compid);
+		printf("Received message from serial with ID #%d (sys:%d|comp:%d):\n", message->msgid, message->sysid, message->compid);
 
 		fprintf(stderr,"Received serial data: ");
 		unsigned int i;
 		uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
 
 		// check message is write length
-		unsigned int messageLength = mavlink_msg_to_send_buffer(buffer, &message);
+		unsigned int messageLength = mavlink_msg_to_send_buffer(buffer, message);
 
 		// message length error
 		if (messageLength > MAVLINK_MAX_PACKET_LEN)

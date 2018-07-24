@@ -21,6 +21,7 @@ indent_mode=2
 name=Handler
 base_path=/home/pi/projects/Handler/
 description=
+file_patterns=
 
 [long line marker]
 long_line_behaviour=1
@@ -28,8 +29,23 @@ long_line_column=72
 
 [files]
 current_page=0
-FILE_NAME_0=115;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FHandler%2Fmain_Handler.cpp;0;4
-FILE_NAME_1=102;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FMAVLink%2Fsensors%2Fsensors.h;0;4
+FILE_NAME_0=355;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FHandler%2Fmain_Handler.cpp;0;4
+FILE_NAME_1=350;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FHandler%2FHandler.h;0;4
+FILE_NAME_2=1629;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FWindMsgQueue.h;0;4
+FILE_NAME_3=5862;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2Fserial_port.h;0;4
+FILE_NAME_4=2503;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FMAVLinkSerial_port.h;0;4
+FILE_NAME_5=1010;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FMAVLink%2Fsensors%2Fmavlink_msg_heartbeat.h;0;4
+FILE_NAME_6=2582;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FMAVLink%2Fsensors%2Fsensors.h;0;4
+FILE_NAME_7=42368;C++;0;EUTF-8;1;1;0;%2Fusr%2Finclude%2Fc%2B%2B%2F6%2Ffunctional;0;4
 
 [VTE]
-last_dir=/home/pi
+last_dir=/home/pi/projects/DaughterBoard/Handler
+
+[build-menu]
+C++FT_01_LB=_Build
+C++FT_01_CM=g++ -Wall -o "%e" "%f" -lpthread
+C++FT_01_WD=
+C++FT_02_LB=_Lint
+C++FT_02_CM=cppcheck --language=c++ --enable=warning,style --template=gcc "%f"
+C++FT_02_WD=
+filetypes=C++;
