@@ -10,8 +10,8 @@ This program takes in sensor data from USB, I2C,PWM, and converts them into Mavl
 - (Methane/Ethane*) JPL
 - (Lidar) Garmin Lidar Lite v3
 
-* In Progress
-+ Has other sensing capabilities
+(* In Progress)
+(+ Has other sensing capabilities)
 
 ## QtPayloadGCS
 Qt Project
