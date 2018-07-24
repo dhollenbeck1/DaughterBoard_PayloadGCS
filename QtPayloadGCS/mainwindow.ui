@@ -235,6 +235,179 @@
        <string>Stop Record all data</string>
       </property>
      </widget>
+     <widget class="QFrame" name="windSensorFrame">
+      <property name="geometry">
+       <rect>
+        <x>609</x>
+        <y>100</y>
+        <width>211</width>
+        <height>260</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLCDNumber" name="windSpeedLcd">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>40</y>
+         <width>64</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="windSensorLabel">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>10</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Wind Sensor</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="windStartButton">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>158</y>
+         <width>101</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Start Display</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="windStopButton">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>210</y>
+         <width>101</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Stop Display</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lidarUnit_2">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>50</y>
+         <width>67</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>m/s</string>
+       </property>
+      </widget>
+      <widget class="QLCDNumber" name="windAngleLcd">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>80</y>
+         <width>64</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lidarUnit_3">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>80</y>
+         <width>67</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>°</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lidarUnit_4">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>120</y>
+         <width>67</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>° C</string>
+       </property>
+      </widget>
+      <widget class="QLCDNumber" name="windTemperatureLcd">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>120</y>
+         <width>64</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>40</y>
+         <width>51</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Speed</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>80</y>
+         <width>67</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Angle</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>6</x>
+         <y>120</y>
+         <width>91</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Temperature</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QCustomPlot" name="windSensorPlot" native="true">
+      <property name="geometry">
+       <rect>
+        <x>830</x>
+        <y>100</y>
+        <width>331</width>
+        <height>260</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="recordTab">
      <attribute name="title">
@@ -261,7 +434,7 @@
          <x>20</x>
          <y>20</y>
          <width>111</width>
-         <height>24</height>
+         <height>41</height>
         </rect>
        </property>
        <property name="text">
@@ -272,7 +445,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>60</y>
+         <y>100</y>
          <width>120</width>
          <height>130</height>
         </rect>
@@ -321,7 +494,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>210</y>
+         <y>250</y>
          <width>120</width>
          <height>130</height>
         </rect>
@@ -370,7 +543,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>360</y>
+         <y>400</y>
          <width>120</width>
          <height>130</height>
         </rect>

@@ -27,8 +27,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QTimer dataTimer;
-    Serial_Port *serial;
     RealTimePlots *realTimePlots;
     RecordedPlot *recordedPlot;
 

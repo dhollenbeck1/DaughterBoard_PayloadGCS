@@ -29,14 +29,19 @@ SOURCES += \
         qcustomplot.cpp \
         serialport.cpp \
         realtimeplots.cpp \
-    recordedplot.cpp
+    recordedplot.cpp \
+    configwindow.cpp \
+    config.cpp
 
 HEADERS += \
         mainwindow.h \
         qcustomplot.h \
         serialport.h \
         realtimeplots.h \
-    recordedplot.h
+    recordedplot.h \
+    configwindow.h \
+    config.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    configwindow.ui

@@ -34,16 +34,18 @@ private:
       void config();
       void initData();
       void lidarSetData( double _distance );
-      void windSetData( double _windSpeed, double _windAngle );
+      void windSetData( double _windSpeed, int _windAngle, double _temperature );
       void pyranometerSetData( double _solarIrradiance );
 
       bool recordAll, recordLidar, recordPyranometer;
-      double distance, windSpeed, windAngle, solarIrradiance;
+      double distance, windSpeed, temperature, solarIrradiance;
+      int windAngle;
       Serial_Port *serial;
       QThread serialThread;
       Ui::MainWindow *ui;
       QFile *dataLogFile;
       QTextStream *out;
+      QCPItemLine *arrow;
 
 signals:
       void begin();

@@ -71,12 +71,14 @@ Serial_Port(const char *uart_name_ , int baudrate_)
     initialize_defaults();
     uart_name = uart_name_;
     baudrate  = baudrate_;
+    start();
 }
 
 Serial_Port::
 Serial_Port()
 {
     initialize_defaults();
+    start();
 }
 
 Serial_Port::
@@ -95,7 +97,7 @@ initialize_defaults()
     fd     = -1;
     status = SERIAL_PORT_CLOSED;
 
-    uart_name = (char*)"/dev/ttyUSB0";
+    uart_name = "/dev/ttyUSB0";
     baudrate  = 57600;
 
     // Start mutex
@@ -417,7 +419,7 @@ _setup_port(int baud, int data_bits, int stop_bits, bool parity, bool hardware_c
 
     // One input byte is enough to return from read()
     // Inter-character timer off
-    config.c_cc[VMIN]  = 1;
+    config.c_cc[VMIN]  = 1;  //Blocking
     config.c_cc[VTIME] = 10; // was 0
 
     // Get the current options for the port
@@ -498,6 +500,9 @@ _setup_port(int baud, int data_bits, int stop_bits, bool parity, bool hardware_c
         return false;
     }
 
+    sleep(2);
+    tcflush(fd,TCIOFLUSH);
+
     // Done!
     return true;
 }
@@ -549,13 +554,12 @@ write_port(char *buf, unsigned len)
 }
 
 void Serial_Port::receiveData() {
-    start();
     while( 1 ) {
         if( read_message( &msg ) ) {
             switch( msg.msgid ) {
                 case MAVLINK_MSG_ID_WIND_SENSOR:
                     mavlink_msg_wind_sensor_decode( &msg, &ws );
-                    cout << "WS : " << ws.angle << " " << ws.wind_speed << endl;
+                    cout << "WS : " << ws.angle << " " << ws.wind_speed << " " << ws.temperature << endl;
                 break;
                 case MAVLINK_MSG_ID_LIDAR:
                     mavlink_msg_lidar_decode( &msg, &li );
@@ -565,7 +569,6 @@ void Serial_Port::receiveData() {
                     mavlink_msg_pyranometer_decode( &msg, &py );
                     cout << "PY : " << py.solarIrradiance << endl;
                 break;
-
             }
             emit dataReceived();
         }

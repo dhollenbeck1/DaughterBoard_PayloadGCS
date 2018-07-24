@@ -19,6 +19,9 @@ RealTimePlots::~RealTimePlots()
     serialThread.quit();
     serialThread.wait();
     delete serial;
+    delete arrow;
+    delete out;
+    delete dataLogFile;
 }
 
 void RealTimePlots::config() {
@@ -62,6 +65,14 @@ void RealTimePlots::config() {
     connect(ui->pyranometerPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->pyranometerPlot->xAxis2, SLOT(setRange(QCPRange)));
     connect(ui->pyranometerPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->lidarPlot->yAxis2, SLOT(setRange(QCPRange)));
 
+    ui->windSensorPlot->addGraph(); // blue line
+    ui->windSensorPlot->yAxis->setRange(-5, 5);
+    ui->windSensorPlot->xAxis->setRange(-5, 5);
+    arrow = new QCPItemLine( ui->windSensorPlot );
+    arrow->setHead(QCPLineEnding::esSpikeArrow);
+    arrow->start->setCoords( 0, 0 );
+    arrow->end->setCoords( 0, 0 );
+
     // Begin serial and move to a thread
     serial = new Serial_Port( "/dev/ttyUSB0", 57600 );
     serial->moveToThread( &serialThread );
@@ -81,9 +92,10 @@ void RealTimePlots::lidarSetData( double _distance ) {
     distance = _distance;
 }
 
-void RealTimePlots::windSetData( double _windSpeed, double _windAngle ){
+void RealTimePlots::windSetData( double _windSpeed, int _windAngle, double _temperature ){
     windSpeed = _windSpeed;
     windAngle = _windAngle;
+    temperature= _temperature;
 }
 
 void RealTimePlots::pyranometerSetData( double _solarIrradiance ) {
@@ -114,7 +126,7 @@ void RealTimePlots::stopRecording() {
 
 void RealTimePlots::initData() {
     lidarSetData( 0.0 );
-    windSetData( 0.0, 0.0 );
+    windSetData( 0.0, 0, 0.0 );
     pyranometerSetData( 0.0 );
 }
 
@@ -136,16 +148,23 @@ void RealTimePlots::dataSlot()
           ui->lidarPlot->xAxis->setRange(key, 8, Qt::AlignRight);
           ui->lidarPlot->replot();
           ui->lidarLcd->display( distance );
-          if( recordAll | recordLidar )
+          if( recordAll )
               *out << "LI," << key << "," << distance << endl;
           lastPointKey = key;
         break;
         case MAVLINK_MSG_ID_WIND_SENSOR:
-            /*windSetData( serial->ws.wind_speed, serial->ws.angle );
-            ui->lidarPlot->graph(0)->addData(key, windSpeed );
-            // rescale value (vertical) axis to fit the current data:
-            ui->windPlot->graph(0)->rescaleValueAxis();
-            lastPointKey = key;*/
+            windSetData( serial->ws.wind_speed, serial->ws.angle, serial->ws.temperature );
+            /*ui->lidarPlot->graph(0)->addData(key, windSpeed );
+            // rescale value (vertical) axis to fit the current data:*/
+            ui->windSensorPlot->graph(0)->rescaleValueAxis();
+            arrow->end->setCoords( - windSpeed * sin( windAngle * M_PI / 180 ), - windSpeed * cos( windAngle * M_PI / 180 ) );
+            ui->windSensorPlot->replot();
+            ui->windSpeedLcd->display( windSpeed );
+            ui->windAngleLcd->display( windAngle );
+            ui->windTemperatureLcd->display( temperature );
+            if( recordAll )
+                *out << "WS," << key << "," << windAngle << "," << windSpeed << "," << temperature <<  endl;
+            lastPointKey = key;
         break;
         case MAVLINK_MSG_ID_PYRANOMETER:
           pyranometerSetData( serial->py.solarIrradiance );
@@ -155,9 +174,8 @@ void RealTimePlots::dataSlot()
           ui->pyranometerPlot->xAxis->setRange(key, 8, Qt::AlignRight);
           ui->pyranometerPlot->replot();
           ui->pyranometerLcd->display(solarIrradiance );
-          if( recordAll | recordPyranometer )
+          if( recordAll )
               *out << "PY," << key << "," << solarIrradiance << endl;
-
           lastPointKey = key;
         break;
       }

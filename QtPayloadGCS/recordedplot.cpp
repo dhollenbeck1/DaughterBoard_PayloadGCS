@@ -90,7 +90,6 @@ void RecordedPlot::plotWind() {
 
 
 void RecordedPlot::config() {
-    // configure right and top axis to show ticks but no labels:
     ui->recordPlot->axisRect()->setupFullAxesBox();
     // make left and bottom axes always transfer their ranges to right and top axes:
     connect(ui->recordPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->recordPlot->xAxis2, SLOT(setRange(QCPRange)));
