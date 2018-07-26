@@ -27,6 +27,8 @@ private:
 
 private slots:
     void openMainWindow();
+    void closeConfigWindow();
 };
+
 
 #endif // CONFIGWINDOW_H

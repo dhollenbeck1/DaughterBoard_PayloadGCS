@@ -5,7 +5,7 @@
 class MAVLinkSerial_Port : public Serial_Port {
 	
 public:
-	MAVLinkSerial_Port( const char* _uart_name , int _baudrate );
+	MAVLinkSerial_Port( const char* _uart_name , int _baudrate, int _mode );
 	
 	int read_message(mavlink_message_t* message);
 	int write_message(mavlink_message_t* message);
@@ -16,10 +16,11 @@ private:
 	
 };
 
-MAVLinkSerial_Port::MAVLinkSerial_Port( const char* _uart_name , int _baudrate ) {
+MAVLinkSerial_Port::MAVLinkSerial_Port( const char* _uart_name , int _baudrate, int _mode ) {
 	initialize_defaults();
 	uart_name = _uart_name;
 	baudrate  = _baudrate;
+	mode      = _mode;
 }
 
 int MAVLinkSerial_Port::read_message(mavlink_message_t* message)

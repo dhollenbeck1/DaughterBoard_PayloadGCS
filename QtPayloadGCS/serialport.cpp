@@ -71,14 +71,12 @@ Serial_Port(const char *uart_name_ , int baudrate_)
     initialize_defaults();
     uart_name = uart_name_;
     baudrate  = baudrate_;
-    start();
 }
 
 Serial_Port::
 Serial_Port()
 {
     initialize_defaults();
-    start();
 }
 
 Serial_Port::
@@ -217,7 +215,7 @@ write_message(mavlink_message_t* message)
 /**
  * throws EXIT_FAILURE if could not open the port
  */
-void
+int
 Serial_Port::
 open_serial()
 {
@@ -248,11 +246,13 @@ open_serial()
     {
         printf("failure, could not configure port.\n");
         //throw EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
     if (fd <= 0)
     {
         printf("Connection attempt to port %s with %d baud, 8N1 failed, exiting.\n", uart_name, baudrate);
         //throw EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
 
     // --------------------------------------------------------------------------
@@ -265,7 +265,7 @@ open_serial()
 
     printf("\n");
 
-    return;
+    return EXIT_SUCCESS;
 
 }
 
@@ -296,11 +296,11 @@ close_serial()
 // ------------------------------------------------------------------------------
 //   Convenience Functions
 // ------------------------------------------------------------------------------
-void
+int
 Serial_Port::
 start()
 {
-    open_serial();
+    return open_serial();
 }
 
 void
@@ -568,6 +568,10 @@ void Serial_Port::receiveData() {
                 case MAVLINK_MSG_ID_PYRANOMETER:
                     mavlink_msg_pyranometer_decode( &msg, &py );
                     cout << "PY : " << py.solarIrradiance << endl;
+                break;
+                case MAVLINK_MSG_ID_OPLS:
+                    mavlink_msg_opls_decode( &msg, &op );
+                    cout << "OP : " << op.ch4 * 1e6 << " " << op.et * 1e6 << endl;
                 break;
             }
             emit dataReceived();

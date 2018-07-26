@@ -1,6 +1,7 @@
 #include <bcm2835.h>
 #include <unistd.h>
 #include <iostream>
+#include "../SharedInclude/LidarMsgQueue.h"
 
 
 class i2cLidar{
@@ -16,10 +17,12 @@ public:
 	
 	i2cLidar();
 	~i2cLidar();
+	void waitForConfig();
 	int init();
 	void measure();
 	int getDistance();
 	void end();	
+	LidarMsgQueue msgQueue;
 
 private:
 	int distance;
@@ -32,6 +35,10 @@ i2cLidar::i2cLidar() {
 
 i2cLidar::~i2cLidar() {
 	end();
+}
+
+void i2cLidar::waitForConfig() {
+	while( msgQueue.receiveConfig() != RCV_SUCCESS );
 }
 
 

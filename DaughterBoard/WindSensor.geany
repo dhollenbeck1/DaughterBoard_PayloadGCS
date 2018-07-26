@@ -28,8 +28,8 @@ long_line_column=72
 
 [files]
 current_page=0
-FILE_NAME_0=555;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FWindSensor%2Fmain_WindSensor.cpp;0;4
-FILE_NAME_1=357;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FWindSensor%2FWindSensor.h;0;4
+FILE_NAME_0=123;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FWindSensor%2Fmain_WindSensor.cpp;0;4
+FILE_NAME_1=642;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FWindSensor%2FWindSensor.h;0;4
 FILE_NAME_2=2309;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FWindMsgQueue.h;0;4
 
 [VTE]

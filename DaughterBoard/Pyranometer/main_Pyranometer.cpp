@@ -1,18 +1,18 @@
 #include "Pyranometer.h"
-#include "../SharedInclude/PyranometerMsgQueue.h"
 #include <unistd.h>
 
 int main( int argc, char **argv ){
 
 	Pyranometer pyranometer;
-	PyranometerMsgQueue msgQueue;
+	
+	pyranometer.waitForConfig();
 		
 	usleep( 1000000 );
 	while( 1 ){
 		pyranometer.sense();
-		msgQueue.setSolarIrradiance( pyranometer.getSolarIrradiance() );
+		pyranometer.msgQueue.setSolarIrradiance( pyranometer.getSolarIrradiance() );
 		cout << pyranometer.getSolarIrradiance() << endl;
-		msgQueue.send();
+		pyranometer.msgQueue.sendData();
 	}
 
 	return EXIT_SUCCESS;

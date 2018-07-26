@@ -23,6 +23,7 @@ private slots:
 
 signals:
     void openMainWindow();
+    void close();
 
 private:
     Ui::configWindow *ui;

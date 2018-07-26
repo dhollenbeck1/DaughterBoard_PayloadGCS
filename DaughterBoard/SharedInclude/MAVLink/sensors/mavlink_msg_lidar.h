@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE LIDAR PACKING
 
-#define MAVLINK_MSG_ID_LIDAR 151
+#define MAVLINK_MSG_ID_LIDAR 152
 
 MAVPACKED(
 typedef struct __mavlink_lidar_t {
@@ -11,17 +11,17 @@ typedef struct __mavlink_lidar_t {
 
 #define MAVLINK_MSG_ID_LIDAR_LEN 3
 #define MAVLINK_MSG_ID_LIDAR_MIN_LEN 3
-#define MAVLINK_MSG_ID_151_LEN 3
-#define MAVLINK_MSG_ID_151_MIN_LEN 3
+#define MAVLINK_MSG_ID_152_LEN 3
+#define MAVLINK_MSG_ID_152_MIN_LEN 3
 
 #define MAVLINK_MSG_ID_LIDAR_CRC 86
-#define MAVLINK_MSG_ID_151_CRC 86
+#define MAVLINK_MSG_ID_152_CRC 86
 
 
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_LIDAR { \
-    151, \
+    152, \
     "LIDAR", \
     2, \
     {  { "distance", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_lidar_t, distance) }, \

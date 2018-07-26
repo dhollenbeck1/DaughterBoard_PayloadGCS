@@ -8,12 +8,15 @@ using namespace std;
 class PyranometerMsgQueue {
 
 public:
-	const long MSG_TYPE = 1;
+	const long DATA_MSG_TYPE   = 1;
+	const long CONFIG_MSG_TYPE = 2;
 	
 	PyranometerMsgQueue();
 	~PyranometerMsgQueue() ;
-	int send();
-	int receive();
+	int sendData();
+	int receiveData();
+	int sendConfig();
+	int receiveConfig();
 	void setSolarIrradiance( uint32_t _solarIrrandiance );
 	void setSpeed( float speed );
 	
@@ -22,11 +25,18 @@ public:
 private:
 	key_t key;
 	int msgid;
-	struct _message {
+	struct _dataMessage {
 		long type;
 		uint32_t solarIrradiance;
-	} message;
-	int length;
+	} dataMessage;
+	int dataMsgLength;
+	
+	struct _configMessage {
+		long type;
+	} configMessage;
+	
+	int configMsgLength;
+
 };
 
 
@@ -37,25 +47,41 @@ PyranometerMsgQueue::PyranometerMsgQueue() {
 		perror( "msgget" );
 		cout << "msgget error" << endl;
 	}
-	message.type = MSG_TYPE;
-	message.solarIrradiance = 0;
-	length = sizeof( message ) - sizeof( long );
+	dataMessage.type = DATA_MSG_TYPE;
+	dataMessage.solarIrradiance = 0;
+	dataMsgLength = sizeof( dataMessage ) - sizeof( long );
+	configMessage.type  = CONFIG_MSG_TYPE;
+	configMsgLength = sizeof( configMessage ) - sizeof( long );
 }
 
 PyranometerMsgQueue::~PyranometerMsgQueue() {
 	msgctl(msgid, IPC_RMID, NULL);   // Delete Msg Queue
 }
 
-
-int PyranometerMsgQueue::send() {
-	if( msgsnd( msgid, &message, length, IPC_NOWAIT ) == -1 )
+int PyranometerMsgQueue::sendConfig() {
+	if( msgsnd( msgid, &configMessage, configMsgLength, IPC_NOWAIT ) == -1 )
 		return SND_FAILURE;
 	else 
 		return SND_SUCCESS;
 }
 
-int PyranometerMsgQueue::receive() {
-	if( msgrcv( msgid, &message, length, MSG_TYPE, IPC_NOWAIT ) == -1 ) {
+int PyranometerMsgQueue::receiveConfig() {
+	if( msgrcv( msgid, &configMessage, configMsgLength, CONFIG_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
+		return RCV_FAILURE;
+	}else {
+		return RCV_SUCCESS;
+	}
+}
+
+int PyranometerMsgQueue::sendData() {
+	if( msgsnd( msgid, &dataMessage, dataMsgLength, IPC_NOWAIT ) == -1 )
+		return SND_FAILURE;
+	else 
+		return SND_SUCCESS;
+}
+
+int PyranometerMsgQueue::receiveData() {
+	if( msgrcv( msgid, &dataMessage, dataMsgLength, DATA_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
 		return RCV_FAILURE;
 	}else {
 		return RCV_SUCCESS;
@@ -63,11 +89,11 @@ int PyranometerMsgQueue::receive() {
 }
 
 void PyranometerMsgQueue::setSolarIrradiance( uint32_t _solarIrradiance ) {
-	message.solarIrradiance = _solarIrradiance;
+	dataMessage.solarIrradiance = _solarIrradiance;
 }
 
 uint32_t PyranometerMsgQueue::getSolarIrradiance() {
-	return message.solarIrradiance;
+	return dataMessage.solarIrradiance;
 }
 
 

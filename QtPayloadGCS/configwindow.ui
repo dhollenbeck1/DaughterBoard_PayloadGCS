@@ -54,7 +54,7 @@
     </item>
    </widget>
   </widget>
-  <widget class="QPlainTextEdit" name="plainTextEdit">
+  <widget class="QPlainTextEdit" name="infoText">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -80,7 +80,7 @@
     <string>Send Configuration</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="waitLineEdit">
+  <widget class="QLineEdit" name="waitText">
    <property name="geometry">
     <rect>
      <x>190</x>
@@ -91,6 +91,32 @@
    </property>
    <property name="text">
     <string>Waiting for Daughter Board ...</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="errorText">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>100</y>
+     <width>521</width>
+     <height>70</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>Cannot connect to Xbee serial. Please ensure it is connected to the correct serial port. </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="closeButton">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>230</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Close</string>
    </property>
   </widget>
  </widget>

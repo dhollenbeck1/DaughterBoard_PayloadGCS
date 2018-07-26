@@ -44,21 +44,20 @@ WindSensor::~WindSensor() {
 void WindSensor::waitForConfig() {
 	while( msgQueue.receiveConfig() != RCV_SUCCESS );
 	stype = msgQueue.getSensorType();
-	std::cout << std::to_string( stype ) << std::endl;
 }
 	
 void WindSensor::init() {
 	switch( stype ) {
 		case FT205 :
-			port = "/dev/ttyUSB1";
+			port = "/dev/ttyUSB2";
 			baudrate = 9600;
 			break;
 		case TRISONICA :
-			port = "/dev/ttyUSB1";
+			port = "/dev/ttyUSB2";
 			baudrate = 115200;
 			break;
 	}
-	serial = new Serial_Port( port, baudrate );
+	serial = new Serial_Port( port, baudrate, 1 );
 	serial->start();
 }
 

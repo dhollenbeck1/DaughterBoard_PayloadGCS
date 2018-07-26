@@ -100,7 +100,7 @@
  * Serial Port Class
  *
  * This object handles the opening and closing of the offboard computer's
- * serial port over which we'll communicate.  It also has methods to write
+ * serial port over which we'll communicate.  It also, has methods to write
  * a byte stream buffer.  MAVlink is not used in this object yet, it's just
  * a serialization interface.  To help with read and write pthreading, it
  * gaurds any port operation with a pthread mutex.
@@ -111,7 +111,7 @@ class Serial_Port
 public:
 
 	Serial_Port();
-	Serial_Port(const char *uart_name_, int baudrate_);
+	Serial_Port(const char *uart_name_, int baudrate_, int _mode);
 	void initialize_defaults();
 	~Serial_Port();
 
@@ -135,6 +135,7 @@ public:
 protected:
 
 	int  fd;
+	int mode;
 	pthread_mutex_t  lock;
 
 	int  _open_port(const char* port);
@@ -150,11 +151,12 @@ protected:
 //   Con/De structors
 // ------------------------------------------------------------------------------
 Serial_Port::
-Serial_Port(const char *uart_name_ , int baudrate_)
+Serial_Port(const char *uart_name_ , int baudrate_, int _mode)
 {
 	initialize_defaults();
 	uart_name = uart_name_;
 	baudrate  = baudrate_;
+	mode = _mode;
 }
 
 Serial_Port::
@@ -181,6 +183,7 @@ initialize_defaults()
 
 	uart_name = (char*)"/dev/ttyUSB0";
 	baudrate  = 57600;
+	mode = 0;
 
 	// Start mutex
 	int result = pthread_mutex_init(&lock, NULL);
@@ -398,7 +401,7 @@ _setup_port(int baud, int data_bits, int stop_bits, bool parity, bool hardware_c
 
     // One input byte is enough to return from read()
     // Inter-character timer off
-    config.c_cc[VMIN]  = 0;
+    config.c_cc[VMIN]  = mode; //1: blocking mode, 0: non blocking mode
     config.c_cc[VTIME] = 10; // was 0
 
     // Get the current options for the port

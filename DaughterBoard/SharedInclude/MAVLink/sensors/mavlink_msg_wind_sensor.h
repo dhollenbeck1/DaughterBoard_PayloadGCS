@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE WIND_SENSOR PACKING
 
-#define MAVLINK_MSG_ID_WIND_SENSOR 150
+#define MAVLINK_MSG_ID_WIND_SENSOR 151
 
 MAVPACKED(
 typedef struct __mavlink_wind_sensor_t {
@@ -13,17 +13,17 @@ typedef struct __mavlink_wind_sensor_t {
 
 #define MAVLINK_MSG_ID_WIND_SENSOR_LEN 11
 #define MAVLINK_MSG_ID_WIND_SENSOR_MIN_LEN 11
-#define MAVLINK_MSG_ID_150_LEN 11
-#define MAVLINK_MSG_ID_150_MIN_LEN 11
+#define MAVLINK_MSG_ID_151_LEN 11
+#define MAVLINK_MSG_ID_151_MIN_LEN 11
 
 #define MAVLINK_MSG_ID_WIND_SENSOR_CRC 102
-#define MAVLINK_MSG_ID_150_CRC 102
+#define MAVLINK_MSG_ID_151_CRC 102
 
 
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_WIND_SENSOR { \
-    150, \
+    151, \
     "WIND_SENSOR", \
     4, \
     {  { "angle", NULL, MAVLINK_TYPE_UINT16_T, 0, 8, offsetof(mavlink_wind_sensor_t, angle) }, \

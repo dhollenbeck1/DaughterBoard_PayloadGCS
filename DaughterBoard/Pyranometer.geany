@@ -27,12 +27,7 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=4
-FILE_NAME_0=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FMsgQueue.h;0;4
-FILE_NAME_1=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FPyranometerMsgQueue.h;0;4
-FILE_NAME_2=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FWindMsgQueue.h;0;4
-FILE_NAME_3=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FSharedInclude%2FLidarMsgQueue.h;0;4
-FILE_NAME_4=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FPyranometer%2Fmain_Pyranometer.cpp;0;4
+current_page=-1
 
 [VTE]
 last_dir=/home/pi

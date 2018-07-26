@@ -3,10 +3,13 @@
 #include <sstream>
 #include <list>  
 #include <mutex>  
+#include "../SharedInclude/constants.h"
 #include "../SharedInclude/MAVLinkSerial_port.h"
 #include "../SharedInclude/LidarMsgQueue.h"
 #include "../SharedInclude/WindMsgQueue.h"
 #include "../SharedInclude/PyranometerMsgQueue.h"
+#include "../SharedInclude/OPLSMsgQueue.h"
+
 
 
 #define DEBUG
@@ -14,7 +17,7 @@
 using namespace std;
 
 
-enum MAVmsgType { wind, lidar, pyranometer }; 
+enum MAVmsgType { wind, lidar, pyranometer, opls }; 
 
 class Handler{
 	
@@ -29,14 +32,15 @@ public:
 	~Handler();
 	void handle();
 	void waitForConfig();
-		void heartBeat();   		 
+	void heartBeat();   		 
 
 private:	
 	LidarMsgQueue lidarMsgQueue;
 	WindMsgQueue windMsgQueue;
 	PyranometerMsgQueue pyranometerMsgQueue;
-
-	MAVmsgType msgType;  			 // Adding more sensors
+	OPLSMsgQueue oplsMsgQueue;
+	
+	MAVmsgType msgType;  			
 	void receiveMsgQueue();
 	void buildMAVMsg();              
 	void sendMAVMsg();	
@@ -44,28 +48,31 @@ private:
 
 	std::mutex serialLock;
 	MAVLinkSerial_Port* MAVSerial;
-	mavlink_message_t heartBeatMsg, configMsg, windMsg, lidarMsg, pyranometerMsg;
+	mavlink_message_t heartBeatMsg, configMsg, windMsg, lidarMsg, pyranometerMsg, oplsMsg;
 	mavlink_config_t cfg;
-	bool windBuild, lidarBuild, pyranometerBuild, windSend, lidarSend, pyranometerSend;
+	bool windBuild, lidarBuild, pyranometerBuild, oplsBuild, windSend, lidarSend, pyranometerSend, oplsSend;
 	uint16_t angle;
 	float windSpeed;
 	float temperature;
 	uint16_t distance;
 	uint32_t solarIrradiance;
+	oplsData oplsdata;
 	uint8_t status;
 	
 };
 
 
 Handler::Handler() {
-	MAVSerial = new MAVLinkSerial_Port( XBeePort, baudRate );
+	MAVSerial = new MAVLinkSerial_Port( XBeePort, baudRate, 0 );
 	MAVSerial->start();
 	windBuild        = false;
 	lidarBuild       = false;
 	pyranometerBuild = false;
+	oplsBuild        = false;
 	windSend         = false;
 	lidarSend        = false;
 	pyranometerSend  = false;
+	oplsSend         = false;
 }
 
 Handler::~Handler() {
@@ -87,10 +94,10 @@ void Handler::waitForConfig() {
 
 void Handler::handle() {
 	receiveMsgQueue();
-	if( lidarBuild || windBuild || pyranometerBuild ) {
+	if( lidarBuild || windBuild || pyranometerBuild || oplsBuild ) {
 		buildMAVMsg();
 	}
-	if( lidarSend || windSend || pyranometerSend ) {
+	if( lidarSend || windSend || pyranometerSend || oplsSend ) {
 		sendMAVMsg();
 	}
 }
@@ -117,13 +124,23 @@ void Handler::buildMAVMsg() {
 	}
 	// Pyranometer
 	if( pyranometerBuild ) {
-		cout << "Pyranometer : " << solarIrradiance << endl;
 		mavlink_msg_pyranometer_pack( DAUGHTER_BOARD_SYSID, 1, &pyranometerMsg, solarIrradiance, 0 ); 
 		pyranometerSend = true;
 		pyranometerBuild = false;
 	}else {
 		pyranometerSend = false;
 	}
+	// OPLS
+	if( oplsBuild ) {
+		mavlink_msg_opls_pack( DAUGHTER_BOARD_SYSID, 1, &oplsMsg, oplsdata.time_, oplsdata.ch4,
+							   oplsdata.et , oplsdata.h2o, oplsdata.p, oplsdata.t, oplsdata.rf, 
+							   oplsdata.lon, oplsdata.lat, oplsdata.lsr ); 
+		oplsSend  = true;
+		oplsBuild = false;
+	}else {
+		oplsSend = false;
+	}
+
 }
 
 void Handler::sendMAVMsg() {
@@ -142,6 +159,12 @@ void Handler::sendMAVMsg() {
 		MAVSerial->write_message( &pyranometerMsg );
 		pyranometerSend = false;
 	}
+	// OPLS
+	if( oplsSend ) {
+		MAVSerial->write_message( &oplsMsg );
+		oplsSend = false;
+	}
+
 
 }
 
@@ -156,29 +179,39 @@ void Handler::receiveMsgQueue() {
 		windBuild = false;
 	}
 	// Lidar
-	if( lidarMsgQueue.receive() == RCV_SUCCESS ) {
+	if( lidarMsgQueue.receiveData() == RCV_SUCCESS ) {
 		lidarBuild = true;
 		distance = lidarMsgQueue.getDistance();
 	}else {
 		lidarBuild = false;
 	}
 	// Pyranometer
-	if( pyranometerMsgQueue.receive() == RCV_SUCCESS ) {
+	if( pyranometerMsgQueue.receiveData() == RCV_SUCCESS ) {
 		pyranometerBuild = true;
 		solarIrradiance = pyranometerMsgQueue.getSolarIrradiance();
 	}else {
 		pyranometerBuild = false;
 	}
+	// OPLS
+	if( oplsMsgQueue.receiveData() == RCV_SUCCESS ) {
+		oplsBuild = true;
+		oplsdata  = oplsMsgQueue.getOPLSData();
+	}else {
+		oplsBuild = false;
+	}
+
 }
 
 void Handler::sendConfigToSensors() {
 	windMsgQueue.setSensorType( cfg.windSensorType );
 	windMsgQueue.sendConfig();
+	lidarMsgQueue.sendConfig();
+	pyranometerMsgQueue.sendConfig();
+	oplsMsgQueue.sendConfig();
 }
 
 void Handler::heartBeat() {  // Sends a heartbeat message every seconds
 	mavlink_msg_heartbeat_pack( DAUGHTER_BOARD_SYSID, 1, &heartBeatMsg, 0 ); 
-	std::cout << "HERE" << std::to_string( heartBeatMsg.msgid ) << std::endl;
 	while( 1 ) {
 		usleep( 1000000 );
 		std::cout << "heartbeat" << std::endl;

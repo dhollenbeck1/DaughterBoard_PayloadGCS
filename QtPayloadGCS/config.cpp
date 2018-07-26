@@ -17,16 +17,29 @@ Config::~Config()
 Config::Config( Ui::configWindow *ui ) :
     ui( ui )
 {
-    connect( ui->sendConfigButton, SIGNAL( clicked() ), this, SLOT( sendConfig() ) );
-    connect( ui->windSensorBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setWindSensorType() ) );
+    ui->errorText->setReadOnly( true );
+    ui->waitText->setReadOnly( true );
+    ui->infoText->setReadOnly( true );
 
     serial = new Serial_Port( "/dev/ttyUSB0", 57600 );
-    ui->sendConfigButton->setEnabled( false );
-    windSensorType = 0;  // TODO: put this into an initData() method
-
-    moveToThread( &thread );
-    connect( &thread, SIGNAL( started() ), this, SLOT( waitForDaughterBoard() ) );
-    thread.start();
+    if( serial->start() != EXIT_SUCCESS ) {
+        ui->infoText->hide();
+        ui->WindSensorGroupBox->hide();
+        ui->sendConfigButton->hide();
+        ui->waitText->hide();
+        ui->errorText->show();
+        ui->closeButton->show();
+    } else {
+        ui->errorText->hide();
+        ui->closeButton->hide();
+        connect( ui->sendConfigButton, SIGNAL( clicked() ), this, SLOT( sendConfig() ) );
+        connect( ui->windSensorBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setWindSensorType() ) );
+        ui->sendConfigButton->setEnabled( false );
+        windSensorType = 0;  // TODO: put this into an initData() method
+        moveToThread( &thread );
+        connect( &thread, SIGNAL( started() ), this, SLOT( waitForDaughterBoard() ) );
+        thread.start();
+    }
 
 }
 
@@ -74,6 +87,6 @@ bool Config::daughterBoardAlive() {
 void Config::waitForDaughterBoard() {
     while( !daughterBoardAlive() ){};
     ui->sendConfigButton->setEnabled( true );
-    ui->waitLineEdit->hide();
+    ui->waitText->hide();
 }
 

@@ -127,14 +127,14 @@ public:
 	int write_message(mavlink_message_t* message);
     int getMsgID();
 
-	void open_serial();
+    int open_serial();
 	void close_serial();
 	
 	int read_port(char* cp);
 	int write_port(char *buf, unsigned len);
 
 
-	void start();
+    int start();
 	void stop();
 
 	void handle_quit( int sig );
@@ -143,6 +143,7 @@ public:
     mavlink_wind_sensor_t ws;
     mavlink_lidar_t li;
     mavlink_pyranometer_t py;
+    mavlink_opls_t op;
 
 public slots:
     void receiveData();

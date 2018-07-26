@@ -9,6 +9,7 @@ configWindow::configWindow(QWidget *parent) :
 
     config = new Config( ui );
     connect( this->config, SIGNAL( openMainWindow() ), this, SLOT( openMainWindow() ) );
+    connect( ui->closeButton, SIGNAL( clicked() ), this, SLOT( closeConfigWindow() ) );
 }
 
 configWindow::~configWindow()
@@ -21,4 +22,8 @@ void configWindow::openMainWindow() {
     this->close();
     w = new MainWindow();
     w->show();
+}
+
+void configWindow::closeConfigWindow() {
+    this->close();
 }

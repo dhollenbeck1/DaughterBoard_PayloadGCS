@@ -1,7 +1,7 @@
 #pragma once
 // MESSAGE PYRANOMETER PACKING
 
-#define MAVLINK_MSG_ID_PYRANOMETER 152
+#define MAVLINK_MSG_ID_PYRANOMETER 153
 
 MAVPACKED(
 typedef struct __mavlink_pyranometer_t {
@@ -11,17 +11,17 @@ typedef struct __mavlink_pyranometer_t {
 
 #define MAVLINK_MSG_ID_PYRANOMETER_LEN 5
 #define MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN 5
-#define MAVLINK_MSG_ID_152_LEN 5
-#define MAVLINK_MSG_ID_152_MIN_LEN 5
+#define MAVLINK_MSG_ID_153_LEN 5
+#define MAVLINK_MSG_ID_153_MIN_LEN 5
 
 #define MAVLINK_MSG_ID_PYRANOMETER_CRC 246
-#define MAVLINK_MSG_ID_152_CRC 246
+#define MAVLINK_MSG_ID_153_CRC 246
 
 
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_PYRANOMETER { \
-    152, \
+    153, \
     "PYRANOMETER", \
     2, \
     {  { "solarIrradiance", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \

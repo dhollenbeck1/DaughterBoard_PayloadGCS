@@ -29,7 +29,8 @@ long_line_column=72
 
 [files]
 current_page=0
-FILE_NAME_0=228;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FLidar%2Fmain_Lidar.cpp;0;4
+FILE_NAME_0=198;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FLidar%2Fmain_Lidar.cpp;0;4
+FILE_NAME_1=671;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FDaughterBoard%2FLidar%2Fi2cLidar.h;0;4
 
 [VTE]
 last_dir=/home/pi

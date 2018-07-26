@@ -1,31 +1,36 @@
 #include <sys/msg.h>
 #include <iostream>
 #include "constants.h"
+
 using namespace std;
 
-class LidarMsgQueue {
+
+class OPLSMsgQueue {
 
 public:
 	const long DATA_MSG_TYPE   = 1;
 	const long CONFIG_MSG_TYPE = 2;
 	
-	LidarMsgQueue();
-	~LidarMsgQueue();
+	OPLSMsgQueue();
+	~OPLSMsgQueue() ;
 	int sendConfig();
 	int receiveConfig();
 	int sendData();
 	int receiveData();
-	void setDistance( uint16_t _distance );
-	uint16_t getDistance();
+	void setOPLSData( oplsData _data );
+	oplsData getOPLSData();
+
+	uint32_t getSolarIrradiance();
 	
 private:
 	key_t key;
 	int msgid;
 	struct _dataMessage {
 		long type;
-		uint16_t distance;
+		oplsData data;
 	} dataMessage;
 	int dataMsgLength;
+	void initDataStructure();
 	
 	struct _configMessage {
 		long type;
@@ -35,31 +40,33 @@ private:
 };
 
 
-LidarMsgQueue::LidarMsgQueue() {
+OPLSMsgQueue::OPLSMsgQueue() {
 	//key = ftok( "progfile", 65 );
-	key = 0x99990002;
+	key = 0x99990004;
 	if( ( msgid = msgget( key, 0600 | IPC_CREAT ) ) == -1 ) {
 		perror( "msgget" );
+		cout << "msgget error" << endl;
 	}
+	
 	dataMessage.type = DATA_MSG_TYPE;
-	dataMessage.distance = 0;
+	initDataStructure();
 	dataMsgLength = sizeof( dataMessage ) - sizeof( long );
 	configMessage.type  = CONFIG_MSG_TYPE;
 	configMsgLength = sizeof( configMessage ) - sizeof( long );
 }
 
-LidarMsgQueue::~LidarMsgQueue() {
-	msgctl(msgid, IPC_RMID, NULL);   // Clear Msg Queue
+OPLSMsgQueue::~OPLSMsgQueue() {
+	msgctl(msgid, IPC_RMID, NULL);   // Delete Msg Queue
 }
 
-int LidarMsgQueue::sendConfig() {
+int OPLSMsgQueue::sendConfig() {
 	if( msgsnd( msgid, &configMessage, configMsgLength, IPC_NOWAIT ) == -1 )
 		return SND_FAILURE;
 	else 
 		return SND_SUCCESS;
 }
 
-int LidarMsgQueue::receiveConfig() {
+int OPLSMsgQueue::receiveConfig() {
 	if( msgrcv( msgid, &configMessage, configMsgLength, CONFIG_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
 		return RCV_FAILURE;
 	}else {
@@ -67,26 +74,40 @@ int LidarMsgQueue::receiveConfig() {
 	}
 }
 
-int LidarMsgQueue::sendData() {
+int OPLSMsgQueue::sendData() {
 	if( msgsnd( msgid, &dataMessage, dataMsgLength, IPC_NOWAIT ) == -1 )
 		return SND_FAILURE;
-	else
+	else 
 		return SND_SUCCESS;
 }
 
-int LidarMsgQueue::receiveData() {
+int OPLSMsgQueue::receiveData() {
 	if( msgrcv( msgid, &dataMessage, dataMsgLength, DATA_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
 		return RCV_FAILURE;
-	}else  {
+	}else {
 		return RCV_SUCCESS;
 	}
 }
 
-uint16_t LidarMsgQueue::getDistance() {
-	return dataMessage.distance;
+
+void OPLSMsgQueue::setOPLSData( oplsData _data ) {
+	dataMessage.data = _data;
 }
 
-void LidarMsgQueue::setDistance( uint16_t _distance ) {
-	dataMessage.distance = _distance;
+oplsData OPLSMsgQueue::getOPLSData() {
+	return dataMessage.data;
+}
+
+void OPLSMsgQueue::initDataStructure() {
+	dataMessage.data.time_ = 0;
+	dataMessage.data.ch4   = 0;
+	dataMessage.data.et    = 0;
+	dataMessage.data.h2o   = 0;
+	dataMessage.data.lat   = 0;
+	dataMessage.data.lon   = 0;
+	dataMessage.data.lsr   = 0;
+	dataMessage.data.p     = 0;
+	dataMessage.data.rf    = 0;
+	dataMessage.data.t     = 0;
 }
 

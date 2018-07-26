@@ -1,4 +1,5 @@
 #include "../SharedInclude/serial_port.h"
+#include "../SharedInclude/PyranometerMsgQueue.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -15,9 +16,12 @@ public:
 	
 	Pyranometer();
 	~Pyranometer();
+	void waitForConfig();
 	void sense();
 	void extractData();
 	uint32_t getSolarIrradiance();
+	PyranometerMsgQueue msgQueue;
+
 	
 private:
 	Serial_Port* serial;
@@ -27,7 +31,7 @@ private:
 };
 
 Pyranometer::Pyranometer() {
-	serial = new Serial_Port( port, baudRate );
+	serial = new Serial_Port( port, baudRate, 1 );
 	serial->start();
 }
 
@@ -35,6 +39,9 @@ Pyranometer::~Pyranometer() {
 	delete serial;
 }
 
+void Pyranometer::waitForConfig() {
+	while( msgQueue.receiveConfig() != RCV_SUCCESS );
+}
 
 void Pyranometer::sense() {
 	byte = '\0';

@@ -36,9 +36,10 @@ private:
       void lidarSetData( double _distance );
       void windSetData( double _windSpeed, int _windAngle, double _temperature );
       void pyranometerSetData( double _solarIrradiance );
+      void oplsSetData( double _oplsTime, double _methane, double _ethane );
 
       bool recordAll, recordLidar, recordPyranometer;
-      double distance, windSpeed, temperature, solarIrradiance;
+      double distance, windSpeed, temperature, solarIrradiance, oplsTime, methane, ethane;
       int windAngle;
       Serial_Port *serial;
       QThread serialThread;

@@ -68,6 +68,20 @@ WindMsgQueue::~WindMsgQueue() {
 	msgctl(msgid, IPC_RMID, NULL);   // Clear Msg Queue
 }
 
+int WindMsgQueue::sendConfig() {
+	if( msgsnd( msgid, &configMessage, configMsgLength, IPC_NOWAIT ) == -1 )
+		return SND_FAILURE;
+	else 
+		return SND_SUCCESS;
+}
+
+int WindMsgQueue::receiveConfig() {
+	if( msgrcv( msgid, &configMessage, configMsgLength, CONFIG_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
+		return RCV_FAILURE;
+	}else {
+		return RCV_SUCCESS;
+	}
+}
 
 int WindMsgQueue::sendData() {
 	if( msgsnd( msgid, &dataMessage, dataMsgLength, IPC_NOWAIT ) == -1 )
@@ -78,21 +92,6 @@ int WindMsgQueue::sendData() {
 
 int WindMsgQueue::receiveData() {
 	if( msgrcv( msgid, &dataMessage, dataMsgLength, DATA_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
-		return RCV_FAILURE;
-	}else {
-		return RCV_SUCCESS;
-	}
-}
-
-int WindMsgQueue::sendConfig() {
-	if( msgsnd( msgid, &configMessage, configMsgLength, IPC_NOWAIT ) == -1 )
-		return SND_FAILURE;
-	else 
-		return SND_SUCCESS;
-}
-
-int WindMsgQueue::receiveConfig() {
-	if( msgrcv( msgid, &configMessage, configMsgLength, CONFIG_MSG_TYPE, IPC_NOWAIT ) == -1 ) {
 		return RCV_FAILURE;
 	}else {
 		return RCV_SUCCESS;
