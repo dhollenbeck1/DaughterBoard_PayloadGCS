@@ -5,5 +5,3 @@ cd /home/pi/DaughterBoard/bin
 ./main_Pyranometer&
 ./main_WindSensor&
 ./main_OPLS&
-
-
