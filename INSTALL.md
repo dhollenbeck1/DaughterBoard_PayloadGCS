@@ -28,6 +28,6 @@ Note: The order you use to plug in the sensors does not matters as long as you s
 
 	$ sudo reboot
 	
-- Click on "Send configuration" button when it is active.
+- On the Qt applicaton, click on "Send configuration" button when it is active (it won't be until the Pi has not reboot).
 
 Your Daughter Board is now ready to acquire data!
