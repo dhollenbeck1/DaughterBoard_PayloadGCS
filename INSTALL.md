@@ -26,7 +26,9 @@
 Note: The order you use to plug in the sensors does not matters as long as you select the right one for the one you plugged in.
 - You now need to reboot the Pi. In the ssh terminal type:
 
+
 	$ sudo reboot
+	
 	
 - Click on "Send configuration" button when it is active.
 
