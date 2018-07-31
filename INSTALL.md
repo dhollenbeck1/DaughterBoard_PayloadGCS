@@ -1,5 +1,5 @@
 # PROJECT INSTALLATION
-- Open a terminal and type the following command lines:
+Open a terminal and type the following command lines
 
 	$ git clone https://github.com/mat0208/DaughterBoard_PayloadGCS.git
 	$ unzip DaughterBoard_PayloadGCS-master.zip
@@ -24,11 +24,9 @@
 - (Optional) Plug in the Wind sensor USB cable in the Raspberry. On the Qt application click on "Add sensor" button and select Wind sensor and its reference (FT205, FT742-SM or Trisonica).
 
 Note: The order you use to plug in the sensors does not matters as long as you select the right one for the one you plugged in.
-- You now need to reboot the Pi. In the ssh terminal type:
-
+ You now need to reboot the Pi. In the ssh terminal type:
 
 	$ sudo reboot
-	
 	
 - Click on "Send configuration" button when it is active.
 
