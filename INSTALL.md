@@ -11,7 +11,7 @@ to make sure the folder DaughterBoard has effectively been copied
 	$ cd DaughterBoard
 	$ sudo ./build.sh
 	$ sudo nano /etc/rc.local
-write "sudo ./../home/pi/DaughterBoard/run.sh" in rc.local file before the "exit 0" line
+write "sudo ./../home/pi/DaughterBoard/run.sh" in /etc/rc.local file before the "exit 0" line
 Press Ctrl-X and Y to save
 
 	$ sudo reboot
