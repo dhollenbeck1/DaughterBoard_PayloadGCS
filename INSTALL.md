@@ -5,7 +5,7 @@
 	
 ## INSTALL Computer (GCS) side:
 
-	- Launch QtCreator. Press Ctrl-O and select payloadGCS.pro file in QtPayloadGCS folder. Launch the application. 
+- Launch QtCreator. Press Ctrl-O and select payloadGCS.pro file in QtPayloadGCS folder. Launch the application. 
 	
 
 ## INSTALL Daughter Board side:
