@@ -9,7 +9,14 @@
 		</message>
 		<message id="150" name="CONFIG">
 			<description>This message contains all the configuration parameters for the daughterboard's sensors.</description>
+
+			<field type="uint8_t" name="windSensorStatus">Tells whether the Wind Sensor is (1) or is not (0) used in the current configuration.</field>
 			<field type="uint8_t" name="windSensorType">The type of wind sensor used: 0 (FT205), 1 (FT742) or 2 (Trisonica).</field>
+            <field type="uint8_t" name="windSensorComPortNum">The serial port number for the wind sensor.</field>
+            <field type="uint8_t" name="lidarStatus">Tells whether the Lidar is (1) or is not (0) used in the current configuration.</field>
+            <field type="uint8_t" name="pyranometerStatus">Tells whether the Pyranometer is (1) or is not (0) used in the current configuration.</field>
+            <field type="uint8_t" name="oplsStatus">Tells whether the OPLS is (1) or is not (0) used in the current configuration.</field>
+            <field type="uint8_t" name="oplsComPortNum">The serial port number for the OPLS.</field>
 		</message>
 		<message id="151" name="WIND_SENSOR">
 			<description>This message encodes all of the wind sensor data from the daughter board.</description>

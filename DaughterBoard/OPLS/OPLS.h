@@ -11,21 +11,22 @@ using namespace std;
 
 class OPLS{
 	
-public:
-	const char* port   = "/dev/ttyUSB1";
-	const int baudRate = 38400;
-	
+public:	
 	OPLS();
 	~OPLS();
 	void waitForConfig();
+	bool isAdded();
+	void init();
 	void serialData();
 	bool parseData();
 	oplsData getData();
 	OPLSMsgQueue msgQueue;
 	
 private:
+	bool added;
 	Serial_Port* serial;
-	//uint32_t solarIrradiance;
+	string port;
+	int baudRate;
 	char buf[ 32 ];
 	queue<char*> fifo;
 	char byte;	
@@ -34,8 +35,6 @@ private:
 };
 
 OPLS::OPLS() {
-	serial = new Serial_Port( port, baudRate, 0 );
-	serial->start();
 }
 
 OPLS::~OPLS() {
@@ -44,6 +43,18 @@ OPLS::~OPLS() {
 
 void OPLS::waitForConfig() {
 	while( msgQueue.receiveConfig() != RCV_SUCCESS );
+	port = "/dev/ttyUSB" + static_cast<ostringstream*>( &(ostringstream() << msgQueue.getSerialPortNum() ) )->str();	
+	baudRate = 38400;
+	added = msgQueue.getSensorStatus();
+}
+
+bool OPLS::isAdded() {
+	return added;
+}
+
+void OPLS::init() {
+	serial = new Serial_Port( port.c_str(), baudRate, 0 );
+	serial->start();
 }
 
 void OPLS::serialData() {

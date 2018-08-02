@@ -31,7 +31,8 @@ SOURCES += \
         realtimeplots.cpp \
     recordedplot.cpp \
     configwindow.cpp \
-    config.cpp
+    config.cpp \
+    windsensorselect.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,8 +41,10 @@ HEADERS += \
         realtimeplots.h \
     recordedplot.h \
     configwindow.h \
-    config.h
+    config.h \
+    windsensorselect.h
 
 FORMS += \
         mainwindow.ui \
-    configwindow.ui
+    configwindow.ui \
+    windsensorselect.ui

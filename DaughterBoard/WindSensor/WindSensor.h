@@ -14,6 +14,7 @@ public:
 	WindSensor();
 	~WindSensor();
 	void waitForConfig();
+	bool isAdded();
 	void init();
 	void sense();
 	uint16_t getAngle();
@@ -22,16 +23,16 @@ public:
 	WindMsgQueue msgQueue;
 	
 private:
+	bool added;
 	Serial_Port* serial;
 	uint8_t stype;
 	uint16_t angle;
 	float windSpeed, U, V, W, temperature;
 	string buf;
 	char byte;
-	const char* port;
+	string port;
 	int baudrate;
 	void extractData();
-	
 };
 
 WindSensor::WindSensor() {
@@ -44,20 +45,24 @@ WindSensor::~WindSensor() {
 void WindSensor::waitForConfig() {
 	while( msgQueue.receiveConfig() != RCV_SUCCESS );
 	stype = msgQueue.getSensorType();
+	port = "/dev/ttyUSB" + static_cast<ostringstream*>( &(ostringstream() << msgQueue.getSerialPortNum() ) )->str();
+	added = msgQueue.getSensorStatus();	
 }
-	
+
+bool WindSensor::isAdded() {
+	return added;
+}
+
 void WindSensor::init() {
 	switch( stype ) {
 		case FT205 :
-			port = "/dev/ttyUSB2";
 			baudrate = 9600;
 			break;
 		case TRISONICA :
-			port = "/dev/ttyUSB2";
 			baudrate = 115200;
 			break;
 	}
-	serial = new Serial_Port( port, baudrate, 1 );
+	serial = new Serial_Port( port.c_str(), baudrate, 1 );
 	serial->start();
 }
 

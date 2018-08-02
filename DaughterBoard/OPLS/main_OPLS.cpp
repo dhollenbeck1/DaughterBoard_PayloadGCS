@@ -5,11 +5,12 @@
 int main( int argc, char **argv ) {
 	
 	OPLS *opls = new OPLS();
-
 	opls->waitForConfig();
+	if( !opls->isAdded() )
+		return EXIT_SUCCESS;
+	opls->init();
 	
 	usleep( 1000000 );
-
 	thread serialThread( [ opls ]{opls->serialData();} );
 	
 	while( 1 ) {

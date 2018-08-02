@@ -17,15 +17,19 @@ public:
 	int receiveData();
 	int sendConfig();
 	int receiveConfig();
+	void setSensorStatus( uint8_t _sensorStatus);
 	void setAngle( uint16_t _angle );
 	void setSpeed( float _speed );
 	void setTemperature( float _temperature );
 	void setSensorType( uint8_t __stype );
+	void setSerialPortNum( uint8_t _num );
 	
 	uint16_t getAngle();
 	float getSpeed();
 	float getTemperature();
+	uint8_t getSensorStatus();
 	uint8_t getSensorType();
+	uint8_t getSerialPortNum();
 	
 private:
 	key_t key;
@@ -42,7 +46,9 @@ private:
 	
 	struct _configMessage {
 		long type;
+		uint8_t sensorStatus;
 		uint8_t stype;
+		uint8_t serialPortNum;
 	} configMessage;
 	
 	int configMsgLength;
@@ -98,6 +104,10 @@ int WindMsgQueue::receiveData() {
 	}
 }
 
+void WindMsgQueue::setSensorStatus( uint8_t _sensorStatus ) {
+	configMessage.sensorStatus = _sensorStatus;
+}
+
 void WindMsgQueue::setAngle( uint16_t _angle ) {
 	dataMessage.angle = _angle;
 }
@@ -111,6 +121,14 @@ void WindMsgQueue::setTemperature( float _temperature ) {
 
 void WindMsgQueue::setSensorType( uint8_t _stype ) {
 	configMessage.stype = _stype;
+}
+
+void WindMsgQueue::setSerialPortNum( uint8_t _num ) {
+	configMessage.serialPortNum = _num;
+}
+
+uint8_t WindMsgQueue::getSensorStatus() {
+	return configMessage.sensorStatus;
 }
 
 uint16_t WindMsgQueue::getAngle() {
@@ -128,3 +146,8 @@ float WindMsgQueue::getTemperature() {
 uint8_t WindMsgQueue::getSensorType() {
 	return configMessage.stype;
 }
+
+uint8_t WindMsgQueue::getSerialPortNum() {
+	return configMessage.serialPortNum;
+}
+

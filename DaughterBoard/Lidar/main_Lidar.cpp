@@ -9,6 +9,9 @@ int main(int argc, char **argv)
 	
 	i2cLidar lidar;
 	lidar.waitForConfig();
+	if( !lidar.isAdded() )
+		return EXIT_SUCCESS;
+	lidar.init();
 	
 	usleep( 1000000 );	
 	while( 1 ) {

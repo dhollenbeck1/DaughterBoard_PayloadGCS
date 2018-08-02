@@ -15,7 +15,9 @@ public:
 	int receiveConfig();
 	int sendData();
 	int receiveData();
+	void setSensorStatus( uint8_t _sensorStatus );
 	void setDistance( uint16_t _distance );
+	uint8_t getSensorStatus();
 	uint16_t getDistance();
 	
 private:
@@ -29,6 +31,7 @@ private:
 	
 	struct _configMessage {
 		long type;
+		uint8_t sensorStatus;
 	} configMessage;
 	
 	int configMsgLength;
@@ -82,11 +85,20 @@ int LidarMsgQueue::receiveData() {
 	}
 }
 
-uint16_t LidarMsgQueue::getDistance() {
-	return dataMessage.distance;
+void LidarMsgQueue::setSensorStatus( uint8_t _sensorStatus ) {
+	configMessage.sensorStatus = _sensorStatus;
 }
 
 void LidarMsgQueue::setDistance( uint16_t _distance ) {
 	dataMessage.distance = _distance;
 }
+
+uint8_t LidarMsgQueue::getSensorStatus() {
+	return configMessage.sensorStatus;
+}
+
+uint16_t LidarMsgQueue::getDistance() {
+	return dataMessage.distance;
+}
+
 

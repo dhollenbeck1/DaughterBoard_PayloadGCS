@@ -17,6 +17,8 @@ public:
 	Pyranometer();
 	~Pyranometer();
 	void waitForConfig();
+	bool isAdded();
+	void init();
 	void sense();
 	void extractData();
 	uint32_t getSolarIrradiance();
@@ -24,6 +26,7 @@ public:
 
 	
 private:
+	bool added;
 	Serial_Port* serial;
 	uint32_t solarIrradiance;
 	string buf;
@@ -31,8 +34,6 @@ private:
 };
 
 Pyranometer::Pyranometer() {
-	serial = new Serial_Port( port, baudRate, 1 );
-	serial->start();
 }
 
 Pyranometer::~Pyranometer() {
@@ -41,6 +42,16 @@ Pyranometer::~Pyranometer() {
 
 void Pyranometer::waitForConfig() {
 	while( msgQueue.receiveConfig() != RCV_SUCCESS );
+	added = msgQueue.getSensorStatus();
+}
+
+bool Pyranometer::isAdded() {
+	return added;
+}
+
+void Pyranometer::init() {
+	serial = new Serial_Port( port, baudRate, 1 );
+	serial->start();
 }
 
 void Pyranometer::sense() {

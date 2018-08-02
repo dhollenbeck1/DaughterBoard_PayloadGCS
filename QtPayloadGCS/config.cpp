@@ -17,14 +17,29 @@ Config::~Config()
 Config::Config( Ui::configWindow *ui ) :
     ui( ui )
 {
+    windSelect = new WindSensorSelect();
+
     ui->errorText->setReadOnly( true );
     ui->waitText->setReadOnly( true );
     ui->infoText->setReadOnly( true );
 
+    connect( ui->sendConfigButton, SIGNAL( clicked() ), this, SLOT( sendConfig() ) );
+    connect( ui->sensorsComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setSensor() ) );
+    connect( ui->addSensorButton, SIGNAL( clicked() ), this, SLOT( addSensor() ) );
+    connect( ui->loadDefaultButton, SIGNAL( clicked() ), this, SLOT( addSensor() ) );
+
+    windSensorStatus = 0;
+    lidarStatus = 0;
+    pyranometerStatus = 0;
+    oplsStatus = 0;
+    sensorComPortNum = 1;
+    windSensorComPortNum = 0;
+    oplsComPortNum = 0;
+
     serial = new Serial_Port( "/dev/ttyUSB0", 57600 );
     if( serial->start() != EXIT_SUCCESS ) {
         ui->infoText->hide();
-        ui->WindSensorGroupBox->hide();
+        //ui->WindSensorGroupBox->hide();
         ui->sendConfigButton->hide();
         ui->waitText->hide();
         ui->errorText->show();
@@ -32,9 +47,10 @@ Config::Config( Ui::configWindow *ui ) :
     } else {
         ui->errorText->hide();
         ui->closeButton->hide();
-        connect( ui->sendConfigButton, SIGNAL( clicked() ), this, SLOT( sendConfig() ) );
-        connect( ui->windSensorBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setWindSensorType() ) );
+
+        //connect( ui->windSensorBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setWindSensorType() ) );
         ui->sendConfigButton->setEnabled( false );
+        ui->addSensorButton->setEnabled( false );
         windSensorType = 0;  // TODO: put this into an initData() method
         moveToThread( &thread );
         connect( &thread, SIGNAL( started() ), this, SLOT( waitForDaughterBoard() ) );
@@ -48,32 +64,19 @@ void Config::sendConfig() {
     serial->write_message( &configMsg );
     serial->close_serial();
     delete serial;
+    delete windSelect;
 
     emit openMainWindow();
 }
 
 void Config::setWindSensorType() {
-    switch( ui->windSensorBox->currentIndex() ) {
-    case 0:
-        windSensorType = 0;  // FT205
-        std::cout << "HERE 0" << std::endl;
-        break;
-    case 1:
-        windSensorType = 1;  // FT742
-        std::cout << "HERE 1" << std::endl;
-        break;
-    case 2:
-        windSensorType = 2;  // Trisonica
-        std::cout << "HERE 2" << std::endl;
-        break;
-    default:
-        windSensorType = 0;  // FT205
-        std::cout << "HERE 0 default" << std::endl;
-    }
+
 }
 
 void Config::buildMAVMsg() {
-    mavlink_msg_config_pack( 254, 1, &configMsg, (uint8_t)windSensorType );
+    mavlink_msg_config_pack( 254, 1, &configMsg, (uint8_t)windSensorStatus, (uint8_t)windSensorType,
+                             (uint8_t)windSensorComPortNum, (uint8_t)lidarStatus, (uint8_t)pyranometerStatus,
+                             (uint8_t)oplsStatus, (uint8_t)oplsComPortNum );
 }
 
 bool Config::daughterBoardAlive() {
@@ -87,6 +90,42 @@ bool Config::daughterBoardAlive() {
 void Config::waitForDaughterBoard() {
     while( !daughterBoardAlive() ){};
     ui->sendConfigButton->setEnabled( true );
+    ui->addSensorButton->setEnabled( true );
     ui->waitText->hide();
+}
+
+void Config::setSensor() {
+    sensor = ui->sensorsComboBox->currentIndex();
+}
+
+void Config::addSensor() {
+    if( !sensorsList.contains( ui->sensorsComboBox->currentText() )) {
+        switch( sensor ) {
+        case 0:
+            windSensorStatus = 1;
+            windSelect->show();
+            while( windSelect->isVisible() );
+            windSensorType = windSelect->getWindSensorType();
+            windSensorComPortNum = sensorComPortNum;
+            sensorComPortNum++;
+            break;
+        case 1:
+            lidarStatus = 1;
+            break;
+        case 2:
+            pyranometerStatus = 1;
+            break;
+        case 3:
+            oplsStatus = 1;
+            oplsComPortNum = sensorComPortNum;
+            sensorComPortNum++;
+            break;
+        default:
+            break;
+        }
+        ui->addedSensorsList->addItem( ui->sensorsComboBox->currentText() );
+        sensorsList.append( ui->sensorsComboBox->currentText() );
+        cout << "windType : " << windSensorType << " win port : " << windSensorComPortNum << " opls port : " << oplsComPortNum << endl;
+    }
 }
 

@@ -17,9 +17,11 @@ public:
 	int receiveData();
 	int sendConfig();
 	int receiveConfig();
+	void setSensorStatus( uint8_t _sensorStatus );
 	void setSolarIrradiance( uint32_t _solarIrrandiance );
 	void setSpeed( float speed );
 	
+	uint8_t getSensorStatus();
 	uint32_t getSolarIrradiance();
 	
 private:
@@ -33,6 +35,7 @@ private:
 	
 	struct _configMessage {
 		long type;
+		uint8_t sensorStatus;
 	} configMessage;
 	
 	int configMsgLength;
@@ -88,8 +91,16 @@ int PyranometerMsgQueue::receiveData() {
 	}
 }
 
+void PyranometerMsgQueue::setSensorStatus( uint8_t _sensorStatus ) {
+	configMessage.sensorStatus = _sensorStatus;
+}
+
 void PyranometerMsgQueue::setSolarIrradiance( uint32_t _solarIrradiance ) {
 	dataMessage.solarIrradiance = _solarIrradiance;
+}
+
+uint8_t PyranometerMsgQueue::getSensorStatus() {
+	return configMessage.sensorStatus;
 }
 
 uint32_t PyranometerMsgQueue::getSolarIrradiance() {

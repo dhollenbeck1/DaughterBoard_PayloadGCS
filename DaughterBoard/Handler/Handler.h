@@ -203,7 +203,13 @@ void Handler::receiveMsgQueue() {
 }
 
 void Handler::sendConfigToSensors() {
+	windMsgQueue.setSensorStatus( cfg.windSensorStatus );
 	windMsgQueue.setSensorType( cfg.windSensorType );
+	windMsgQueue.setSerialPortNum( cfg.windSensorComPortNum );
+	lidarMsgQueue.setSensorStatus( cfg.lidarStatus );
+	pyranometerMsgQueue.setSensorStatus( cfg.pyranometerStatus );
+	oplsMsgQueue.setSensorStatus( cfg.oplsStatus );
+	oplsMsgQueue.setSerialPortNum( cfg.oplsComPortNum );
 	windMsgQueue.sendConfig();
 	lidarMsgQueue.sendConfig();
 	pyranometerMsgQueue.sendConfig();

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>589</width>
-    <height>329</height>
+    <width>599</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,44 +16,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QGroupBox" name="WindSensorGroupBox">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>90</y>
-     <width>120</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Wind Sensor</string>
-   </property>
-   <widget class="QComboBox" name="windSensorBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>86</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>FT205</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>FT742</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Trisonica</string>
-     </property>
-    </item>
-   </widget>
-  </widget>
   <widget class="QPlainTextEdit" name="infoText">
    <property name="geometry">
     <rect>
@@ -64,14 +26,14 @@
     </rect>
    </property>
    <property name="plainText">
-    <string>These are the configuration parameters that will be sent to the DaughterBoard. Please select the ones corresponding to your current setup and press &quot;Send&quot; button to begin data logging session.</string>
+    <string>Select a sensor, add it and plug it in the DaughterBoard before adding another one. When you added all the sensors press the &quot;Send&quot; button to begin data logging session.</string>
    </property>
   </widget>
   <widget class="QPushButton" name="sendConfigButton">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>290</y>
+     <x>310</x>
+     <y>360</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -83,8 +45,8 @@
   <widget class="QLineEdit" name="waitText">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>260</y>
+     <x>210</x>
+     <y>330</y>
      <width>211</width>
      <height>25</height>
     </rect>
@@ -96,7 +58,7 @@
   <widget class="QPlainTextEdit" name="errorText">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>40</x>
      <y>100</y>
      <width>521</width>
      <height>70</height>
@@ -109,8 +71,8 @@
   <widget class="QPushButton" name="closeButton">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>230</y>
+     <x>260</x>
+     <y>300</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -119,6 +81,81 @@
     <string>Close</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="loadDefaultButton">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>360</y>
+     <width>151</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load default</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="sensorsComboBox">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>130</y>
+     <width>241</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Wind Sensor</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Lidar Garmin Lite v3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Pyranometer Apogee Instruments SP-212</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>OPLS</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QPushButton" name="addSensorButton">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>170</y>
+     <width>121</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add sensor &gt;&gt;</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="addedSensorsList">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>130</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+  </widget>
+  <zorder>errorText</zorder>
+  <zorder>infoText</zorder>
+  <zorder>sendConfigButton</zorder>
+  <zorder>waitText</zorder>
+  <zorder>closeButton</zorder>
+  <zorder>loadDefaultButton</zorder>
+  <zorder>sensorsComboBox</zorder>
+  <zorder>addSensorButton</zorder>
+  <zorder>addedSensorsList</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -91,11 +91,17 @@ static void mavlink_test_config(uint8_t system_id, uint8_t component_id, mavlink
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
     mavlink_config_t packet_in = {
-        5
+        5,72,139,206,17,84,151
     };
     mavlink_config_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
+        packet1.windSensorStatus = packet_in.windSensorStatus;
         packet1.windSensorType = packet_in.windSensorType;
+        packet1.windSensorComPortNum = packet_in.windSensorComPortNum;
+        packet1.lidarStatus = packet_in.lidarStatus;
+        packet1.pyranometerStatus = packet_in.pyranometerStatus;
+        packet1.oplsStatus = packet_in.oplsStatus;
+        packet1.oplsComPortNum = packet_in.oplsComPortNum;
         
         
 #ifdef MAVLINK_STATUS_FLAG_OUT_MAVLINK1
@@ -110,12 +116,12 @@ static void mavlink_test_config(uint8_t system_id, uint8_t component_id, mavlink
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_config_pack(system_id, component_id, &msg , packet1.windSensorType );
+    mavlink_msg_config_pack(system_id, component_id, &msg , packet1.windSensorStatus , packet1.windSensorType , packet1.windSensorComPortNum , packet1.lidarStatus , packet1.pyranometerStatus , packet1.oplsStatus , packet1.oplsComPortNum );
     mavlink_msg_config_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_config_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.windSensorType );
+    mavlink_msg_config_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.windSensorStatus , packet1.windSensorType , packet1.windSensorComPortNum , packet1.lidarStatus , packet1.pyranometerStatus , packet1.oplsStatus , packet1.oplsComPortNum );
     mavlink_msg_config_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -128,7 +134,7 @@ static void mavlink_test_config(uint8_t system_id, uint8_t component_id, mavlink
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-    mavlink_msg_config_send(MAVLINK_COMM_1 , packet1.windSensorType );
+    mavlink_msg_config_send(MAVLINK_COMM_1 , packet1.windSensorStatus , packet1.windSensorType , packet1.windSensorComPortNum , packet1.lidarStatus , packet1.pyranometerStatus , packet1.oplsStatus , packet1.oplsComPortNum );
     mavlink_msg_config_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }

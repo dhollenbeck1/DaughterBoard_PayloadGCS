@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include "ui_configwindow.h"
+#include "windsensorselect.h"
 #include "serialport.h"
 #include <QThread>
 #include <QObject>
@@ -19,6 +20,8 @@ public:
 private slots:
     void sendConfig();
     void setWindSensorType();
+    void setSensor();
+    void addSensor();
     void waitForDaughterBoard();
 
 signals:
@@ -28,8 +31,15 @@ signals:
 private:
     Ui::configWindow *ui;
     Serial_Port *serial;
+    WindSensorSelect *windSelect;
     QThread thread;
     int windSensorType;
+    int sensor; // index 0: Lidar, 1: Pyranometer, 2: Wind sensor, 3: OPLS
+    QStringList sensorsList;
+    int windSensorStatus, lidarStatus, pyranometerStatus, oplsStatus;
+    int sensorComPortNum;
+    int windSensorComPortNum;
+    int oplsComPortNum;
     void buildMAVMsg();
     bool daughterBoardAlive();
     mavlink_message_t configMsg, heartBeatMsg;

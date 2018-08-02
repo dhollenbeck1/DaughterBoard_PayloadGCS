@@ -17,12 +17,17 @@ public:
 	int receiveConfig();
 	int sendData();
 	int receiveData();
+	void setSensorStatus( uint8_t _sensorStatus );
 	void setOPLSData( oplsData _data );
-	oplsData getOPLSData();
+	void setSerialPortNum( uint8_t _num );
 
-	uint32_t getSolarIrradiance();
+	uint8_t getSensorStatus();
+	oplsData getOPLSData();
+	int getSerialPortNum();
 	
 private:
+	uint8_t serialPortNum;
+
 	key_t key;
 	int msgid;
 	struct _dataMessage {
@@ -34,6 +39,8 @@ private:
 	
 	struct _configMessage {
 		long type;
+		uint8_t sensorStatus;
+		uint8_t serialPortNum;
 	} configMessage;
 	
 	int configMsgLength;
@@ -89,13 +96,28 @@ int OPLSMsgQueue::receiveData() {
 	}
 }
 
+void OPLSMsgQueue::setSensorStatus( uint8_t _sensorStatus ) {
+	configMessage.sensorStatus = _sensorStatus;
+}
 
 void OPLSMsgQueue::setOPLSData( oplsData _data ) {
 	dataMessage.data = _data;
 }
 
+void OPLSMsgQueue::setSerialPortNum( uint8_t _num ) {
+	configMessage.serialPortNum = _num;
+}
+
+uint8_t OPLSMsgQueue::getSensorStatus() {
+	return configMessage.sensorStatus;
+}
+
 oplsData OPLSMsgQueue::getOPLSData() {
 	return dataMessage.data;
+}
+
+int OPLSMsgQueue::getSerialPortNum() {
+	return configMessage.serialPortNum;
 }
 
 void OPLSMsgQueue::initDataStructure() {

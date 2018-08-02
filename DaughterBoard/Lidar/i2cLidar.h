@@ -18,6 +18,7 @@ public:
 	i2cLidar();
 	~i2cLidar();
 	void waitForConfig();
+	bool isAdded();
 	int init();
 	void measure();
 	int getDistance();
@@ -25,12 +26,12 @@ public:
 	LidarMsgQueue msgQueue;
 
 private:
+	bool added;
 	int distance;
 };
 
 
 i2cLidar::i2cLidar() {
-	init();
 }
 
 i2cLidar::~i2cLidar() {
@@ -39,8 +40,12 @@ i2cLidar::~i2cLidar() {
 
 void i2cLidar::waitForConfig() {
 	while( msgQueue.receiveConfig() != RCV_SUCCESS );
+	added = msgQueue.getSensorStatus();
 }
 
+bool i2cLidar::isAdded() {
+	return added;
+}
 
 int i2cLidar::init() {
 	if (!bcm2835_init())

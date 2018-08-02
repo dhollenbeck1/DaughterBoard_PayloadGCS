@@ -5,6 +5,8 @@ int main( int argc, char **argv ){
 
 	WindSensor windSensor;
 	windSensor.waitForConfig();
+	if( !windSensor.isAdded() )
+		return EXIT_SUCCESS;
 	windSensor.init();
 	
 	usleep( 1000000 );
