@@ -3,6 +3,7 @@
 #include <sstream>
 #include <list>  
 #include <mutex>  
+#include <time.h>
 #include "../SharedInclude/constants.h"
 #include "../SharedInclude/MAVLinkSerial_port.h"
 #include "../SharedInclude/LidarMsgQueue.h"
@@ -12,7 +13,7 @@
 
 
 
-#define DEBUG
+//#define DEBUG
 
 using namespace std;
 
@@ -30,9 +31,12 @@ public:
 	
 	Handler();
 	~Handler();
+	void init();
 	void handle();
 	void waitForConfig();
-	void heartBeat();   		 
+	void heartBeat();  
+	
+	double elapsed; 		 
 
 private:	
 	LidarMsgQueue lidarMsgQueue;
@@ -58,11 +62,21 @@ private:
 	uint32_t solarIrradiance;
 	oplsData oplsdata;
 	uint8_t status;
-	
+	time_t start;
+	bool first;
+	//double elapsed;
 };
 
 
 Handler::Handler() {
+}
+
+Handler::~Handler() {
+	MAVSerial->close_serial();
+	delete MAVSerial;
+}
+
+void Handler::init() {
 	MAVSerial = new MAVLinkSerial_Port( XBeePort, baudRate, 0 );
 	MAVSerial->start();
 	windBuild        = false;
@@ -73,12 +87,9 @@ Handler::Handler() {
 	lidarSend        = false;
 	pyranometerSend  = false;
 	oplsSend         = false;
+	first            = true;
 }
 
-Handler::~Handler() {
-	MAVSerial->close_serial();
-	delete MAVSerial;
-}
 
 void Handler::waitForConfig() {
 	while( 1 ) {
@@ -106,7 +117,9 @@ void Handler::handle() {
 void Handler::buildMAVMsg() {
 	// Wind Sensor
 	if( windBuild ) {
-		cout << "Wind : " << angle << " " << windSpeed << " " << temperature << endl;
+		#ifdef DEBUG
+			cout << "Wind : " << angle << " " << windSpeed << " " << temperature << endl;
+		#endif
 		mavlink_msg_wind_sensor_pack( DAUGHTER_BOARD_SYSID, 1, &windMsg, angle, windSpeed, temperature, 0 ); 
 		windSend = true;
 		windBuild = false;
@@ -115,7 +128,9 @@ void Handler::buildMAVMsg() {
 	}
 	// Lidar
 	if( lidarBuild ) {
-		cout << "Lidar : " << distance << endl;
+		#ifdef DEBUG
+			cout << "Lidar : " << distance << endl;
+		#endif
 		mavlink_msg_lidar_pack( DAUGHTER_BOARD_SYSID, 1, &lidarMsg, distance, 0 ); 
 		lidarSend = true;
 		lidarBuild = false;
@@ -169,8 +184,12 @@ void Handler::sendMAVMsg() {
 }
 
 void Handler::receiveMsgQueue() {	
-	// Wind sensor	
+	if( first ) 
+		start = time( 0 );
+	first = false;
+	// Wind sensor
 	if( windMsgQueue.receiveData() == RCV_SUCCESS ) {
+		elapsed = difftime( time( 0 ), start );
 		windBuild = true;
 		angle = windMsgQueue.getAngle();
 		windSpeed = windMsgQueue.getSpeed();
@@ -180,6 +199,7 @@ void Handler::receiveMsgQueue() {
 	}
 	// Lidar
 	if( lidarMsgQueue.receiveData() == RCV_SUCCESS ) {
+		elapsed = difftime( time( 0 ), start );
 		lidarBuild = true;
 		distance = lidarMsgQueue.getDistance();
 	}else {
@@ -187,6 +207,7 @@ void Handler::receiveMsgQueue() {
 	}
 	// Pyranometer
 	if( pyranometerMsgQueue.receiveData() == RCV_SUCCESS ) {
+		elapsed = difftime( time( 0 ), start );
 		pyranometerBuild = true;
 		solarIrradiance = pyranometerMsgQueue.getSolarIrradiance();
 	}else {
@@ -194,6 +215,7 @@ void Handler::receiveMsgQueue() {
 	}
 	// OPLS
 	if( oplsMsgQueue.receiveData() == RCV_SUCCESS ) {
+		elapsed = difftime( time( 0 ), start );
 		oplsBuild = true;
 		oplsdata  = oplsMsgQueue.getOPLSData();
 	}else {
