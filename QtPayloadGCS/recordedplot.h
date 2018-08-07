@@ -21,16 +21,26 @@ public:
 
 private slots:
     void loadFromFile();
-    void plotLidar();
-    void plotPyranometer();
-    void plotWind();
+    void plotData();
+    void loadData();
 
 private:
     void config();
     void initData();
+    void plotLidar();
+    void plotPyranometer();
+    void plotWindAngle();
+    void plotWindSpeed();
+    void plotTemperature();
+    void plotMethane();
+    void plotEthane();
+
     QMainWindow *mainWindow;
     Ui::MainWindow *ui;
-    QVector<double> xLidar, yLidar, xWind, yWind, xPyranometer, yPyranometer;
+    QVector<double> xLidar, yLidar, xWindSpeed, yWindSpeed,
+                    xWindAngle, yWindAngle, xTemperature, yTemperature,
+                    xPyranometer, yPyranometer, xMethane, yMethane,
+                    xEthane, yEthane;
 };
 
 #endif // RECORDEDPLOT_H

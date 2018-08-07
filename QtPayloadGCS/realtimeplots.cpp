@@ -18,7 +18,6 @@ RealTimePlots::~RealTimePlots()
 {
     serialThread.quit();
     serialThread.wait();
-    delete serial;
     delete arrow;
     delete out;
     delete dataLogFile;
@@ -227,7 +226,7 @@ void RealTimePlots::dataSlot()
 
 void RealTimePlots::createLogFile() {
     QString filename;
-    time_t t = time( 0 );
+    time_t t = time( nullptr );
 
     filename += "../QtPayloadGCS/LogFiles/DataLog_";
     filename += to_string( t ).c_str();

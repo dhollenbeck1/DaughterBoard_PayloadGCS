@@ -21,9 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connect load file button and plot buttons for "recorded" tab
     connect( ui->loadFileButton, SIGNAL( clicked() ), recordedPlot, SLOT( loadFromFile() ) );
-    connect( ui->lidarPlotButton, SIGNAL( clicked() ), recordedPlot, SLOT( plotLidar() ) );
-    connect( ui->windPlotButton, SIGNAL( clicked() ), recordedPlot, SLOT( plotWind() ) );
-    connect( ui->pyranometerPlotButton, SIGNAL( clicked() ), recordedPlot, SLOT( plotPyranometer() ) );
+    connect( ui->recordDataSelect, SIGNAL( currentIndexChanged( int ) ), recordedPlot, SLOT( loadData() ) );
+    connect( ui->plotButton, SIGNAL( clicked() ), recordedPlot, SLOT( plotData() ) );
 }
 
 MainWindow::~MainWindow()

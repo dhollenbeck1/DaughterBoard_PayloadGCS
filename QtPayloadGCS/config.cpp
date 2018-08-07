@@ -11,59 +11,31 @@ Config::~Config()
 {
     thread.quit();
     thread.wait();
-    delete serial;
+    delete windSelect;
+    delete comError;
 }
 
-Config::Config( Ui::configWindow *ui ) :
-    ui( ui )
+Config::Config( Ui::configWindow *ui, Serial_Port *serial ) :
+    ui( ui ), serial( serial )
 {
+    initData();
     windSelect = new WindSensorSelect();
-
-    ui->errorText->setReadOnly( true );
-    ui->waitText->setReadOnly( true );
-    ui->infoText->setReadOnly( true );
-
     connect( ui->sendConfigButton, SIGNAL( clicked() ), this, SLOT( sendConfig() ) );
     connect( ui->sensorsComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setSensor() ) );
     connect( ui->addSensorButton, SIGNAL( clicked() ), this, SLOT( addSensor() ) );
-    connect( ui->loadDefaultButton, SIGNAL( clicked() ), this, SLOT( addSensor() ) );
+    moveToThread( &thread );
+    connect( &thread, SIGNAL( started() ), this, SLOT( waitForDaughterBoard() ) );
+    thread.start();
 
-    windSensorStatus = 0;
-    lidarStatus = 0;
-    pyranometerStatus = 0;
-    oplsStatus = 0;
-    sensorComPortNum = 1;
-    windSensorComPortNum = 0;
-    oplsComPortNum = 0;
+}
 
-    serial = new Serial_Port( "/dev/ttyUSB0", 57600 );
-    if( serial->start() != EXIT_SUCCESS ) {
-        ui->infoText->hide();
-        //ui->WindSensorGroupBox->hide();
-        ui->sendConfigButton->hide();
-        ui->waitText->hide();
-        ui->errorText->show();
-        ui->closeButton->show();
-    } else {
-        ui->errorText->hide();
-        ui->closeButton->hide();
-
-        //connect( ui->windSensorBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setWindSensorType() ) );
-        ui->sendConfigButton->setEnabled( false );
-        ui->addSensorButton->setEnabled( false );
-        windSensorType = 0;  // TODO: put this into an initData() method
-        moveToThread( &thread );
-        connect( &thread, SIGNAL( started() ), this, SLOT( waitForDaughterBoard() ) );
-        thread.start();
-    }
-
+void Config::begin() {
 }
 
 void Config::sendConfig() {
     buildMAVMsg();
     serial->write_message( &configMsg );
     serial->close_serial();
-    delete serial;
     delete windSelect;
 
     emit openMainWindow();
@@ -73,25 +45,21 @@ void Config::setWindSensorType() {
 
 }
 
+void Config::initData() {
+    windSensorStatus = 0;
+    windSensorType = 0;
+    lidarStatus = 0;
+    pyranometerStatus = 0;
+    oplsStatus = 0;
+    sensorComPortNum = 1;
+    windSensorComPortNum = 0;
+    oplsComPortNum = 0;
+}
+
 void Config::buildMAVMsg() {
     mavlink_msg_config_pack( 254, 1, &configMsg, (uint8_t)windSensorStatus, (uint8_t)windSensorType,
                              (uint8_t)windSensorComPortNum, (uint8_t)lidarStatus, (uint8_t)pyranometerStatus,
                              (uint8_t)oplsStatus, (uint8_t)oplsComPortNum );
-}
-
-bool Config::daughterBoardAlive() {
-    serial->read_message( &heartBeatMsg );
-    if( heartBeatMsg.msgid == MAVLINK_MSG_ID_HEARTBEAT ) {
-        return true;
-    }
-    return false;
-}
-
-void Config::waitForDaughterBoard() {
-    while( !daughterBoardAlive() ){};
-    ui->sendConfigButton->setEnabled( true );
-    ui->addSensorButton->setEnabled( true );
-    ui->waitText->hide();
 }
 
 void Config::setSensor() {
@@ -127,5 +95,20 @@ void Config::addSensor() {
         sensorsList.append( ui->sensorsComboBox->currentText() );
         cout << "windType : " << windSensorType << " win port : " << windSensorComPortNum << " opls port : " << oplsComPortNum << endl;
     }
+}
+
+bool Config::daughterBoardAlive() {
+    serial->read_message( &heartBeatMsg );
+    if( heartBeatMsg.msgid == MAVLINK_MSG_ID_HEARTBEAT ) {
+        return true;
+    }
+    return false;
+}
+
+void Config::waitForDaughterBoard() {
+    while( !daughterBoardAlive() ){};
+    ui->sendConfigButton->setEnabled( true );
+    ui->addSensorButton->setEnabled( true );
+    ui->waitText->hide();
 }
 

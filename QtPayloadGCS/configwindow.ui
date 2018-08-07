@@ -55,32 +55,6 @@
     <string>Waiting for Daughter Board ...</string>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="errorText">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>100</y>
-     <width>521</width>
-     <height>70</height>
-    </rect>
-   </property>
-   <property name="plainText">
-    <string>Cannot connect to Xbee serial. Please ensure it is connected to the correct serial port. </string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="closeButton">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>300</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Close</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="loadDefaultButton">
    <property name="geometry">
     <rect>
@@ -147,15 +121,6 @@
     </rect>
    </property>
   </widget>
-  <zorder>errorText</zorder>
-  <zorder>infoText</zorder>
-  <zorder>sendConfigButton</zorder>
-  <zorder>waitText</zorder>
-  <zorder>closeButton</zorder>
-  <zorder>loadDefaultButton</zorder>
-  <zorder>sensorsComboBox</zorder>
-  <zorder>addSensorButton</zorder>
-  <zorder>addedSensorsList</zorder>
  </widget>
  <resources/>
  <connections/>

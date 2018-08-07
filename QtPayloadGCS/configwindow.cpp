@@ -6,11 +6,16 @@ configWindow::configWindow(QWidget *parent) :
     ui(new Ui::configWindow)
 {
     ui->setupUi( this );
-
-    config = new Config( ui );
-    connect( this->config, SIGNAL( openMainWindow() ), this, SLOT( openMainWindow() ) );
-    connect( ui->closeButton, SIGNAL( clicked() ), this, SLOT( closeConfigWindow() ) );
 }
+
+void configWindow::init( Serial_Port *_serial ) {
+    serial = _serial;
+    config = new Config( ui, serial );
+    connect( this->config, SIGNAL( openMainWindow() ), this, SLOT( openMainWindow() ) );
+    ui->waitText->setReadOnly( true );
+    ui->infoText->setReadOnly( true );
+}
+
 
 configWindow::~configWindow()
 {

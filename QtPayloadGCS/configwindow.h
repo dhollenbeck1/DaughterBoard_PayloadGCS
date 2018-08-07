@@ -19,15 +19,17 @@ class configWindow : public QDialog
 public:
     explicit configWindow(QWidget *parent = nullptr);
     ~configWindow();
+    void init( Serial_Port *_serial );
+
+private slots:
+    void openMainWindow();
+    void closeConfigWindow();
 
 private:
     Ui::configWindow *ui;
     MainWindow *w;
     Config *config;
-
-private slots:
-    void openMainWindow();
-    void closeConfigWindow();
+    Serial_Port *serial;
 };
 
 

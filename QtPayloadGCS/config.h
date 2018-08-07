@@ -3,6 +3,7 @@
 
 #include "ui_configwindow.h"
 #include "windsensorselect.h"
+#include "communicationerror.h"
 #include "serialport.h"
 #include <QThread>
 #include <QObject>
@@ -14,8 +15,9 @@ class Config : public QObject
 
 public:
     Config();
-    Config( Ui::configWindow *ui);
+    Config( Ui::configWindow *ui, Serial_Port *serial );
     ~Config();
+    void begin();
 
 private slots:
     void sendConfig();
@@ -31,8 +33,9 @@ signals:
 private:
     Ui::configWindow *ui;
     Serial_Port *serial;
-    WindSensorSelect *windSelect;
     QThread thread;
+    WindSensorSelect *windSelect;
+    CommunicationError *comError;
     int windSensorType;
     int sensor; // index 0: Lidar, 1: Pyranometer, 2: Wind sensor, 3: OPLS
     QStringList sensorsList;
@@ -40,6 +43,7 @@ private:
     int sensorComPortNum;
     int windSensorComPortNum;
     int oplsComPortNum;
+    void initData();
     void buildMAVMsg();
     bool daughterBoardAlive();
     mavlink_message_t configMsg, heartBeatMsg;

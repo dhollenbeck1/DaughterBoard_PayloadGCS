@@ -32,7 +32,8 @@ SOURCES += \
     recordedplot.cpp \
     configwindow.cpp \
     config.cpp \
-    windsensorselect.cpp
+    windsensorselect.cpp \
+    communicationerror.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,9 +43,11 @@ HEADERS += \
     recordedplot.h \
     configwindow.h \
     config.h \
-    windsensorselect.h
+    windsensorselect.h \
+    communicationerror.h
 
 FORMS += \
         mainwindow.ui \
     configwindow.ui \
-    windsensorselect.ui
+    windsensorselect.ui \
+    communicationerror.ui
