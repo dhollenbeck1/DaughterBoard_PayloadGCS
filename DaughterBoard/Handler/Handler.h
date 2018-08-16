@@ -82,7 +82,6 @@ void Handler::init() {
 	lidarSend        = false;
 	pyranometerSend  = false;
 	oplsSend         = false;
-	first            = true;
 }
 
 
