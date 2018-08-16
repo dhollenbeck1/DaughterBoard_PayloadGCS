@@ -32,3 +32,23 @@ Note: The order you use to plug in the sensors does not matters as long as you s
 - On the Qt applicaton, click on "Send configuration" button when it is active (it won't be until the Pi has not reboot).
 
 Your Daughter Board is now ready to acquire data!
+
+## Windows
+If you can not access the RP through monitor and mouse follow these steps. In the boot partition of the RaspberryPi SD card add the following files.
+ - Need to add file called "ssh". There is no extension. 
+ - Need to add file called "wpa_supplicant.conf". 
+ 
+ For Raspian Jessie
+ 	network={
+		ssid="YOUR_NETWORK_NAME"
+		psk="YOUR_PASSWORD"
+		key_mgmt=WPA-PSK
+		}
+		
+ For Raspian Stretch
+   	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+ 	network={
+		ssid="YOUR_NETWORK_NAME"
+		psk="YOUR_PASSWORD"
+		key_mgmt=WPA-PSK
+		}
