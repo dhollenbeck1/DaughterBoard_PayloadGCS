@@ -54,3 +54,7 @@ If you can not access the RP through monitor and mouse follow these steps. In th
 		psk="YOUR_PASSWORD"
 		key_mgmt=WPA-PSK
 		}
+		
+Check if the process is running. Use the shell for RP and type (after reboot). 
+
+	ps -U root |grep main
