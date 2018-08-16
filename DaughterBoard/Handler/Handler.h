@@ -13,7 +13,7 @@
 
 
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 
@@ -24,7 +24,7 @@ class Handler{
 	
 public:
 	const char* XBeePort = "/dev/ttyUSB0";
-	const int baudRate   = 57600;
+	const int baudRate   = 38400;
 	const int DAUGHTER_BOARD_SYSID = 32;
 //#define SENSOR_OK             0
 //#define SENSOR_NOT_RESPONDING 0xFF
@@ -36,8 +36,6 @@ public:
 	void waitForConfig();
 	void heartBeat();  
 	
-	double elapsed; 		 
-
 private:	
 	LidarMsgQueue lidarMsgQueue;
 	WindMsgQueue windMsgQueue;
@@ -62,9 +60,6 @@ private:
 	uint32_t solarIrradiance;
 	oplsData oplsdata;
 	uint8_t status;
-	time_t start;
-	bool first;
-	//double elapsed;
 };
 
 
@@ -184,12 +179,8 @@ void Handler::sendMAVMsg() {
 }
 
 void Handler::receiveMsgQueue() {	
-	if( first ) 
-		start = time( 0 );
-	first = false;
 	// Wind sensor
 	if( windMsgQueue.receiveData() == RCV_SUCCESS ) {
-		elapsed = difftime( time( 0 ), start );
 		windBuild = true;
 		angle = windMsgQueue.getAngle();
 		windSpeed = windMsgQueue.getSpeed();
@@ -199,15 +190,14 @@ void Handler::receiveMsgQueue() {
 	}
 	// Lidar
 	if( lidarMsgQueue.receiveData() == RCV_SUCCESS ) {
-		elapsed = difftime( time( 0 ), start );
 		lidarBuild = true;
 		distance = lidarMsgQueue.getDistance();
+std::cout << "distance : " << distance << std::endl;
 	}else {
 		lidarBuild = false;
 	}
 	// Pyranometer
 	if( pyranometerMsgQueue.receiveData() == RCV_SUCCESS ) {
-		elapsed = difftime( time( 0 ), start );
 		pyranometerBuild = true;
 		solarIrradiance = pyranometerMsgQueue.getSolarIrradiance();
 	}else {
@@ -215,7 +205,6 @@ void Handler::receiveMsgQueue() {
 	}
 	// OPLS
 	if( oplsMsgQueue.receiveData() == RCV_SUCCESS ) {
-		elapsed = difftime( time( 0 ), start );
 		oplsBuild = true;
 		oplsdata  = oplsMsgQueue.getOPLSData();
 	}else {

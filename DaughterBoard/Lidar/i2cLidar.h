@@ -3,6 +3,7 @@
 #include <iostream>
 #include "../SharedInclude/LidarMsgQueue.h"
 
+#define DEBUG
 
 class i2cLidar{
 	

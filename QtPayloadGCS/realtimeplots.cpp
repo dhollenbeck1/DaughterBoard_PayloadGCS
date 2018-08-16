@@ -95,7 +95,7 @@ void RealTimePlots::config() {
     connect(ui->oplsPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->oplsPlot->yAxis2, SLOT(setRange(QCPRange)));
 
     // Begin serial and move to a thread
-    serial = new Serial_Port( "/dev/ttyUSB0", 57600 );
+    serial = new Serial_Port( "/dev/ttyUSB0", 38400 );
     serial->start();
     serial->moveToThread( &serialThread );
     connect(&serialThread, &QThread::finished, serial, &QObject::deleteLater);

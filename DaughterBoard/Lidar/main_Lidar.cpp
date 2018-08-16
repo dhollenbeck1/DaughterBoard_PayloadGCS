@@ -8,19 +8,34 @@ int main(int argc, char **argv)
 {
 	
 	i2cLidar lidar;
+	
+	#ifdef DEBUG
+		cout << "wait for config" << endl;
+	#endif
+	
 	lidar.waitForConfig();
+	
+	#ifdef DEBUG
+		cout << "config received" << endl;
+	#endif
+
 	if( !lidar.isAdded() )
 		return EXIT_SUCCESS;
-	lidar.init();
-	
+		
+	if( !lidar.init() ) {
+		cout << "Failed to initialize Lidar" << endl;
+		return EXIT_FAILURE;
+	}
+
 	usleep( 1000000 );	
 	while( 1 ) {
 		lidar.measure();
 		lidar.msgQueue.setDistance( lidar.getDistance() );
 		lidar.msgQueue.sendData();
-		cout << lidar.getDistance() << endl;
+		#ifdef DEBUG
+			cout << lidar.getDistance() << endl;
+		#endif
 	}
-
 	
 	return EXIT_SUCCESS;
 }

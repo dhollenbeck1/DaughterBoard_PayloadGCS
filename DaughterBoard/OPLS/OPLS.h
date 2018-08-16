@@ -43,7 +43,7 @@ OPLS::~OPLS() {
 
 void OPLS::waitForConfig() {
 	while( msgQueue.receiveConfig() != RCV_SUCCESS );
-	port = "/dev/ttyUSB" + static_cast<ostringstream*>( &(ostringstream() << msgQueue.getSerialPortNum() ) )->str();	
+	port = "/dev/ttyUSB" + to_string( msgQueue.getSerialPortNum() );	
 	baudRate = 38400;
 	added = msgQueue.getSensorStatus();
 }
