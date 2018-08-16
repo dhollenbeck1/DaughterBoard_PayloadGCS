@@ -33,7 +33,7 @@ Note: The order you use to plug in the sensors does not matters as long as you s
 
 Your Daughter Board is now ready to acquire data!
 
-## Windows
+## SSH over hotspot
 If you can not access the RP through monitor and mouse follow these steps. In the boot partition of the RaspberryPi SD card add the following files.
  - Need to add file called "ssh". There is no extension. 
  - Need to add file called "wpa_supplicant.conf". 
