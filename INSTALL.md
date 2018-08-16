@@ -39,6 +39,7 @@ If you can not access the RP through monitor and mouse follow these steps. In th
  - Need to add file called "wpa_supplicant.conf". 
  
  For Raspian Jessie
+ 
  	network={
 		ssid="YOUR_NETWORK_NAME"
 		psk="YOUR_PASSWORD"
@@ -46,6 +47,7 @@ If you can not access the RP through monitor and mouse follow these steps. In th
 		}
 		
  For Raspian Stretch
+ 
    	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
  	network={
 		ssid="YOUR_NETWORK_NAME"
