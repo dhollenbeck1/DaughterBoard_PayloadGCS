@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt update
-apt install cmake
+# apt install cmake
 ## Library needed to handle GPIO I2C for Lidar sensor. This project is using the version 1.56. Visit this website to get the latest version: http://www.airspayce.com/mikem/bcm2835/
 wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.56.tar.gz
 tar zxvf bcm2835-1.56.tar.gz
