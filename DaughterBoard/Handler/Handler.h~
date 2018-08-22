@@ -57,7 +57,7 @@ private:
 	float windSpeed;
 	float temperature;
 	uint16_t distance;
-	float solarIrradiance;
+	uint32_t solarIrradiance;
 	oplsData oplsdata;
 	uint8_t status;
 };

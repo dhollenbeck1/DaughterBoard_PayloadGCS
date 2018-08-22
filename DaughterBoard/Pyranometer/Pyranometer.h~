@@ -21,14 +21,14 @@ public:
 	void init();
 	void sense();
 	void extractData();
-        float getSolarIrradiance();
+	uint32_t getSolarIrradiance();
 	PyranometerMsgQueue msgQueue;
 
 	
 private:
 	bool added;
 	Serial_Port* serial;
-	float solarIrradiance;
+	uint32_t solarIrradiance;
 	string buf;
 	char byte;	
 };
@@ -61,16 +61,16 @@ void Pyranometer::sense() {
 			cout << "Error reading from windSensor port " << port << endl;
 		}
 		buf += byte;	
-	}
+	}				
 	byte = '\0';
-	extractData();
+	extractData();	
 }
 
 void Pyranometer::extractData() {
-	solarIrradiance = (float)stof( buf );
+	solarIrradiance = (uint32_t)stoi( buf );
 	buf.clear();
 }
 
-float Pyranometer::getSolarIrradiance() {
+uint32_t Pyranometer::getSolarIrradiance() {
 	return solarIrradiance;
 }

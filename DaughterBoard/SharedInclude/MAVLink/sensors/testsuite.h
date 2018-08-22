@@ -263,7 +263,7 @@ static void mavlink_test_pyranometer(uint8_t system_id, uint8_t component_id, ma
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
     mavlink_pyranometer_t packet_in = {
-        963497464,17
+        17.0,17
     };
     mavlink_pyranometer_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));

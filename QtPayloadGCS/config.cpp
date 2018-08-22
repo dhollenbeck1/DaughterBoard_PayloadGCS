@@ -19,6 +19,8 @@ Config::Config( Ui::configWindow *ui, Serial_Port *serial ) :
     ui( ui ), serial( serial )
 {
     initData();
+    ui->sendConfigButton->setEnabled( false );
+    ui->addSensorButton->setEnabled( false );
     windSelect = new WindSensorSelect();
     connect( ui->sendConfigButton, SIGNAL( clicked() ), this, SLOT( sendConfig() ) );
     connect( ui->sensorsComboBox, SIGNAL( currentIndexChanged( int ) ), this, SLOT( setSensor() ) );

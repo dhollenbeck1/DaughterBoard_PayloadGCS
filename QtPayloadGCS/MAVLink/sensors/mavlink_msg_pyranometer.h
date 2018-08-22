@@ -5,7 +5,7 @@
 
 MAVPACKED(
 typedef struct __mavlink_pyranometer_t {
- uint32_t solarIrradiance; /*< The solar iradiance measured by the Pyranometer (in W.m-2).*/
+ float solarIrradiance; /*< The solar iradiance measured by the Pyranometer (in W.m-2).*/
  uint8_t status; /*< Status of the Pyranometer. 0 indicates on and 0xFF indicates off.*/
 }) mavlink_pyranometer_t;
 
@@ -14,8 +14,8 @@ typedef struct __mavlink_pyranometer_t {
 #define MAVLINK_MSG_ID_153_LEN 5
 #define MAVLINK_MSG_ID_153_MIN_LEN 5
 
-#define MAVLINK_MSG_ID_PYRANOMETER_CRC 246
-#define MAVLINK_MSG_ID_153_CRC 246
+#define MAVLINK_MSG_ID_PYRANOMETER_CRC 57
+#define MAVLINK_MSG_ID_153_CRC 57
 
 
 
@@ -24,7 +24,7 @@ typedef struct __mavlink_pyranometer_t {
     153, \
     "PYRANOMETER", \
     2, \
-    {  { "solarIrradiance", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
+    {  { "solarIrradiance", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
          { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 4, offsetof(mavlink_pyranometer_t, status) }, \
          } \
 }
@@ -32,7 +32,7 @@ typedef struct __mavlink_pyranometer_t {
 #define MAVLINK_MESSAGE_INFO_PYRANOMETER { \
     "PYRANOMETER", \
     2, \
-    {  { "solarIrradiance", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
+    {  { "solarIrradiance", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
          { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 4, offsetof(mavlink_pyranometer_t, status) }, \
          } \
 }
@@ -49,11 +49,11 @@ typedef struct __mavlink_pyranometer_t {
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_pyranometer_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint32_t solarIrradiance, uint8_t status)
+                               float solarIrradiance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_PYRANOMETER_LEN];
-    _mav_put_uint32_t(buf, 0, solarIrradiance);
+    _mav_put_float(buf, 0, solarIrradiance);
     _mav_put_uint8_t(buf, 4, status);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_PYRANOMETER_LEN);
@@ -81,11 +81,11 @@ static inline uint16_t mavlink_msg_pyranometer_pack(uint8_t system_id, uint8_t c
  */
 static inline uint16_t mavlink_msg_pyranometer_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint32_t solarIrradiance,uint8_t status)
+                                   float solarIrradiance,uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_PYRANOMETER_LEN];
-    _mav_put_uint32_t(buf, 0, solarIrradiance);
+    _mav_put_float(buf, 0, solarIrradiance);
     _mav_put_uint8_t(buf, 4, status);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_PYRANOMETER_LEN);
@@ -137,11 +137,11 @@ static inline uint16_t mavlink_msg_pyranometer_encode_chan(uint8_t system_id, ui
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_pyranometer_send(mavlink_channel_t chan, uint32_t solarIrradiance, uint8_t status)
+static inline void mavlink_msg_pyranometer_send(mavlink_channel_t chan, float solarIrradiance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_PYRANOMETER_LEN];
-    _mav_put_uint32_t(buf, 0, solarIrradiance);
+    _mav_put_float(buf, 0, solarIrradiance);
     _mav_put_uint8_t(buf, 4, status);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_PYRANOMETER, buf, MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN, MAVLINK_MSG_ID_PYRANOMETER_LEN, MAVLINK_MSG_ID_PYRANOMETER_CRC);
@@ -176,11 +176,11 @@ static inline void mavlink_msg_pyranometer_send_struct(mavlink_channel_t chan, c
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_pyranometer_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint32_t solarIrradiance, uint8_t status)
+static inline void mavlink_msg_pyranometer_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  float solarIrradiance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
-    _mav_put_uint32_t(buf, 0, solarIrradiance);
+    _mav_put_float(buf, 0, solarIrradiance);
     _mav_put_uint8_t(buf, 4, status);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_PYRANOMETER, buf, MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN, MAVLINK_MSG_ID_PYRANOMETER_LEN, MAVLINK_MSG_ID_PYRANOMETER_CRC);
@@ -204,9 +204,9 @@ static inline void mavlink_msg_pyranometer_send_buf(mavlink_message_t *msgbuf, m
  *
  * @return The solar iradiance measured by the Pyranometer (in W.m-2).
  */
-static inline uint32_t mavlink_msg_pyranometer_get_solarIrradiance(const mavlink_message_t* msg)
+static inline float mavlink_msg_pyranometer_get_solarIrradiance(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint32_t(msg,  0);
+    return _MAV_RETURN_float(msg,  0);
 }
 
 /**

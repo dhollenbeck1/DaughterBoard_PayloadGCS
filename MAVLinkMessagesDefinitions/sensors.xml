@@ -32,7 +32,7 @@
 		</message>
 		<message id="153" name="PYRANOMETER">
 			<description>This message encodes all of the pyranometer data from the daughter board.</description>
-			<field type="uint32_t" name="solarIrradiance">The solar iradiance measured by the Pyranometer (in W.m-2).</field>
+			<field type="float" name="solarIrradiance">The solar iradiance measured by the Pyranometer (in W.m-2).</field>
 			<field type="uint8_t" name="status">Status of the Pyranometer. 0 indicates on and 0xFF indicates off.</field>
 		</message>
 		<message id="154" name="OPLS">
