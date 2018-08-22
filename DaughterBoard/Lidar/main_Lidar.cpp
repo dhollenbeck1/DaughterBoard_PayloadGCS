@@ -21,8 +21,8 @@ int main(int argc, char **argv)
 
 	if( !lidar.isAdded() )
 		return EXIT_SUCCESS;
-		
-	if( !lidar.init() ) {
+
+	if( lidar.init() != EXIT_SUCCESS ) {
 		cout << "Failed to initialize Lidar" << endl;
 		return EXIT_FAILURE;
 	}

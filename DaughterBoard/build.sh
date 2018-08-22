@@ -26,4 +26,9 @@ g++ -std=c++11 -o ../bin/main_OPLS main_OPLS.cpp -lpthread
 cd ..
 chmod +x bin/*
 ## Apply a patch to the kernel in order to use an older driver for i2c communication. This is required for the Lidar Garmin Lite v3  to work properly.
+echo "# Patch to use previous i2c driver" >> /boot/config.txt
 echo "dtoverlay=i2c_bcm2708" >> /boot/config.txt
+
+## Enables uart on GPIO pins 8 and 10
+echo "# Enables uart on GPIO pins 8 and 10" >> /boot/config.txt
+echo "enable_uart=1" >> /boot/config.txt

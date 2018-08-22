@@ -51,6 +51,7 @@ bool i2cLidar::isAdded() {
 int i2cLidar::init() {
 	if (!bcm2835_init())
         return EXIT_FAILURE;
+	std::cout << "reached" << std::endl;
 	bcm2835_i2c_begin();
 	bcm2835_i2c_setSlaveAddress ( LIDAR_I2C_ADDR );
 	
