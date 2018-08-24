@@ -16,7 +16,13 @@ Open a terminal and type the following command lines
 	$ ls  (this is to make sure that the folder DaughterBoard has effectively been copied)
 	$ cd DaughterBoard
 	$ sudo ./build.sh
+	
+- Answer 'Y' when you are requested if you want to reboot the Pi.
+- Then a few more modifications need to be done. Open a terminal and type:
+--
 	$ sudo nano /etc/rc.local
+--
+
 - Write "sudo ./../home/pi/DaughterBoard/run.sh" in /etc/rc.local file before the "exit 0" line, then press Ctrl-X and Y to save
 - Plug in one Xbee on the computer and the other one on the Raspberry Pi.
 - (Optional) Wire the Lidar to the Lidar connector as well as the Pyranometer to the Pyranometer connector. Nothings more need to be done for these sensors' set-up.
@@ -24,10 +30,6 @@ Open a terminal and type the following command lines
 - (Optional) Plug in the Wind sensor USB cable in the Raspberry. On the Qt application click on "Add sensor" button and select Wind sensor and its reference (FT205, FT742-SM or Trisonica).
 
 Note: The order you use to plug in the sensors does not matters as long as you select the right one for the one you plugged in.
-
- You now need to reboot the Pi. In the ssh terminal type:
-
-	$ sudo reboot
 	
 - On the Qt applicaton, click on "Send configuration" button when it is active (it won't be until the Pi has not reboot).
 
