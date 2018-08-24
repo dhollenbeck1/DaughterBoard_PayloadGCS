@@ -1,21 +1,21 @@
 # PROJECT INSTALLATION
 Open a terminal and type the following command lines
 
-	$ git clone https://github.com/mat0208/DaughterBoard_PayloadGCS.git
-	$ unzip DaughterBoard_PayloadGCS-master.zip
-	$ cd DaughterBoard_PayloadGCS-master
+		$ git clone https://github.com/mat0208/DaughterBoard_PayloadGCS.git
+		$ unzip DaughterBoard_PayloadGCS-master.zip
+		$ cd DaughterBoard_PayloadGCS-master
 	
 ## INSTALL Computer (GCS) side:
 
 - Launch QtCreator. Press Ctrl-O and select payloadGCS.pro file in QtPayloadGCS folder. Launch the application. 
 	
 ## INSTALL Daughter Board side:
-
-	$ scp -rp DaughterBoard pi@raspberrypi.local:~
-	$ ssh pi@raspberrypi.local
-	$ ls  (this is to make sure that the folder DaughterBoard has effectively been copied)
-	$ cd DaughterBoard
-	$ sudo ./build.sh
+	
+		$ scp -rp DaughterBoard pi@raspberrypi.local:~
+		$ ssh pi@raspberrypi.local
+		$ ls  (this is to make sure that the folder DaughterBoard has effectively been copied)
+		$ cd DaughterBoard
+		$ sudo ./build.sh
 	
 - Answer 'Y' when you are requested if you want to reboot the Pi.
 - Then a few more modifications need to be done. Open a terminal and type:
@@ -23,6 +23,16 @@ Open a terminal and type the following command lines
 		$ sudo nano /etc/rc.local
 
 - Write "sudo ./../home/pi/DaughterBoard/run.sh" in /etc/rc.local file before the "exit 0" line, then press Ctrl-X and Y to save
+- In the terminal run: 
+
+		$ sudo nano /lib/udev/hwclock-set 
+		
+and comment out these three lines:
+
+		#if [ -e /run/systemd/system ] ; then
+		# exit 0
+		#fi
+
 - Plug in one Xbee on the computer and the other one on the Raspberry Pi.
 - (Optional) Wire the Lidar to the Lidar connector as well as the Pyranometer to the Pyranometer connector. Nothings more need to be done for these sensors' set-up.
 - (Optional) Plug in the OPLS USB cable in the Raspberry. On the Qt application click on "Add sensor" button and select OPLS.
