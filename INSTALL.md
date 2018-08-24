@@ -2,7 +2,7 @@
 Open a terminal and type the following command lines
 
 		$ git clone https://github.com/mat0208/DaughterBoard_PayloadGCS.git
-		$ cd DaughterBoard_PayloadGCS-master
+		$ cd DaughterBoard_PayloadGCS
 	
 ## INSTALL Computer (GCS) side:
 
