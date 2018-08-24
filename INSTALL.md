@@ -17,7 +17,7 @@ Open a terminal and type the following command lines
 		$ sudo ./build.sh
 	
 - Answer 'Y' when you are requested if you want to reboot the Pi.
-- Then a few more modifications need to be done. Open a terminal and type:
+- Then a few more modifications need to be done. Connect again to the Pi through ssh and type:
 
 		$ sudo nano /etc/rc.local
 
