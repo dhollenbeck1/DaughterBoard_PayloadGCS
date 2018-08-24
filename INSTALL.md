@@ -33,6 +33,8 @@ and comment out these three lines:
 		# exit 0
 		#fi
 
+The system is now ready-to-use. Reboot and you will be able to begin a data login session.
+
 - Plug in one Xbee on the computer and the other one on the Raspberry Pi.
 - (Optional) Wire the Lidar to the Lidar connector as well as the Pyranometer to the Pyranometer connector. Nothings more need to be done for these sensors' set-up.
 - (Optional) Plug in the OPLS USB cable in the Raspberry. On the Qt application click on "Add sensor" button and select OPLS.
