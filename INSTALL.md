@@ -19,9 +19,8 @@ Open a terminal and type the following command lines
 	
 - Answer 'Y' when you are requested if you want to reboot the Pi.
 - Then a few more modifications need to be done. Open a terminal and type:
---
-	$ sudo nano /etc/rc.local
---
+
+		$ sudo nano /etc/rc.local
 
 - Write "sudo ./../home/pi/DaughterBoard/run.sh" in /etc/rc.local file before the "exit 0" line, then press Ctrl-X and Y to save
 - Plug in one Xbee on the computer and the other one on the Raspberry Pi.
