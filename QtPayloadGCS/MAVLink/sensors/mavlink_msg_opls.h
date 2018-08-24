@@ -15,15 +15,17 @@ typedef struct __mavlink_opls_t {
  double lon; /*< Longitude.*/
  double lat; /*< Latitude.*/
  double lsr; /*< Laser power.*/
+ uint32_t sec; /*< Epoch number of seconds.*/
+ uint32_t usec; /*< Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision*/
 }) mavlink_opls_t;
 
-#define MAVLINK_MSG_ID_OPLS_LEN 80
-#define MAVLINK_MSG_ID_OPLS_MIN_LEN 80
-#define MAVLINK_MSG_ID_154_LEN 80
-#define MAVLINK_MSG_ID_154_MIN_LEN 80
+#define MAVLINK_MSG_ID_OPLS_LEN 88
+#define MAVLINK_MSG_ID_OPLS_MIN_LEN 88
+#define MAVLINK_MSG_ID_154_LEN 88
+#define MAVLINK_MSG_ID_154_MIN_LEN 88
 
-#define MAVLINK_MSG_ID_OPLS_CRC 147
-#define MAVLINK_MSG_ID_154_CRC 147
+#define MAVLINK_MSG_ID_OPLS_CRC 181
+#define MAVLINK_MSG_ID_154_CRC 181
 
 
 
@@ -31,8 +33,10 @@ typedef struct __mavlink_opls_t {
 #define MAVLINK_MESSAGE_INFO_OPLS { \
     154, \
     "OPLS", \
-    10, \
-    {  { "time", NULL, MAVLINK_TYPE_DOUBLE, 0, 0, offsetof(mavlink_opls_t, time) }, \
+    12, \
+    {  { "sec", NULL, MAVLINK_TYPE_UINT32_T, 0, 80, offsetof(mavlink_opls_t, sec) }, \
+         { "usec", NULL, MAVLINK_TYPE_UINT32_T, 0, 84, offsetof(mavlink_opls_t, usec) }, \
+         { "time", NULL, MAVLINK_TYPE_DOUBLE, 0, 0, offsetof(mavlink_opls_t, time) }, \
          { "ch4", NULL, MAVLINK_TYPE_DOUBLE, 0, 8, offsetof(mavlink_opls_t, ch4) }, \
          { "et", NULL, MAVLINK_TYPE_DOUBLE, 0, 16, offsetof(mavlink_opls_t, et) }, \
          { "h2o", NULL, MAVLINK_TYPE_DOUBLE, 0, 24, offsetof(mavlink_opls_t, h2o) }, \
@@ -47,8 +51,10 @@ typedef struct __mavlink_opls_t {
 #else
 #define MAVLINK_MESSAGE_INFO_OPLS { \
     "OPLS", \
-    10, \
-    {  { "time", NULL, MAVLINK_TYPE_DOUBLE, 0, 0, offsetof(mavlink_opls_t, time) }, \
+    12, \
+    {  { "sec", NULL, MAVLINK_TYPE_UINT32_T, 0, 80, offsetof(mavlink_opls_t, sec) }, \
+         { "usec", NULL, MAVLINK_TYPE_UINT32_T, 0, 84, offsetof(mavlink_opls_t, usec) }, \
+         { "time", NULL, MAVLINK_TYPE_DOUBLE, 0, 0, offsetof(mavlink_opls_t, time) }, \
          { "ch4", NULL, MAVLINK_TYPE_DOUBLE, 0, 8, offsetof(mavlink_opls_t, ch4) }, \
          { "et", NULL, MAVLINK_TYPE_DOUBLE, 0, 16, offsetof(mavlink_opls_t, et) }, \
          { "h2o", NULL, MAVLINK_TYPE_DOUBLE, 0, 24, offsetof(mavlink_opls_t, h2o) }, \
@@ -68,6 +74,8 @@ typedef struct __mavlink_opls_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param time Time.
  * @param ch4 CH4.
  * @param et Et.
@@ -81,7 +89,7 @@ typedef struct __mavlink_opls_t {
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_opls_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               double time, double ch4, double et, double h2o, double p, double t, double rf, double lon, double lat, double lsr)
+                               uint32_t sec, uint32_t usec, double time, double ch4, double et, double h2o, double p, double t, double rf, double lon, double lat, double lsr)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_OPLS_LEN];
@@ -95,6 +103,8 @@ static inline uint16_t mavlink_msg_opls_pack(uint8_t system_id, uint8_t componen
     _mav_put_double(buf, 56, lon);
     _mav_put_double(buf, 64, lat);
     _mav_put_double(buf, 72, lsr);
+    _mav_put_uint32_t(buf, 80, sec);
+    _mav_put_uint32_t(buf, 84, usec);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_OPLS_LEN);
 #else
@@ -109,6 +119,8 @@ static inline uint16_t mavlink_msg_opls_pack(uint8_t system_id, uint8_t componen
     packet.lon = lon;
     packet.lat = lat;
     packet.lsr = lsr;
+    packet.sec = sec;
+    packet.usec = usec;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_OPLS_LEN);
 #endif
@@ -123,6 +135,8 @@ static inline uint16_t mavlink_msg_opls_pack(uint8_t system_id, uint8_t componen
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param time Time.
  * @param ch4 CH4.
  * @param et Et.
@@ -137,7 +151,7 @@ static inline uint16_t mavlink_msg_opls_pack(uint8_t system_id, uint8_t componen
  */
 static inline uint16_t mavlink_msg_opls_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   double time,double ch4,double et,double h2o,double p,double t,double rf,double lon,double lat,double lsr)
+                                   uint32_t sec,uint32_t usec,double time,double ch4,double et,double h2o,double p,double t,double rf,double lon,double lat,double lsr)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_OPLS_LEN];
@@ -151,6 +165,8 @@ static inline uint16_t mavlink_msg_opls_pack_chan(uint8_t system_id, uint8_t com
     _mav_put_double(buf, 56, lon);
     _mav_put_double(buf, 64, lat);
     _mav_put_double(buf, 72, lsr);
+    _mav_put_uint32_t(buf, 80, sec);
+    _mav_put_uint32_t(buf, 84, usec);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_OPLS_LEN);
 #else
@@ -165,6 +181,8 @@ static inline uint16_t mavlink_msg_opls_pack_chan(uint8_t system_id, uint8_t com
     packet.lon = lon;
     packet.lat = lat;
     packet.lsr = lsr;
+    packet.sec = sec;
+    packet.usec = usec;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_OPLS_LEN);
 #endif
@@ -183,7 +201,7 @@ static inline uint16_t mavlink_msg_opls_pack_chan(uint8_t system_id, uint8_t com
  */
 static inline uint16_t mavlink_msg_opls_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_opls_t* opls)
 {
-    return mavlink_msg_opls_pack(system_id, component_id, msg, opls->time, opls->ch4, opls->et, opls->h2o, opls->p, opls->t, opls->rf, opls->lon, opls->lat, opls->lsr);
+    return mavlink_msg_opls_pack(system_id, component_id, msg, opls->sec, opls->usec, opls->time, opls->ch4, opls->et, opls->h2o, opls->p, opls->t, opls->rf, opls->lon, opls->lat, opls->lsr);
 }
 
 /**
@@ -197,13 +215,15 @@ static inline uint16_t mavlink_msg_opls_encode(uint8_t system_id, uint8_t compon
  */
 static inline uint16_t mavlink_msg_opls_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_opls_t* opls)
 {
-    return mavlink_msg_opls_pack_chan(system_id, component_id, chan, msg, opls->time, opls->ch4, opls->et, opls->h2o, opls->p, opls->t, opls->rf, opls->lon, opls->lat, opls->lsr);
+    return mavlink_msg_opls_pack_chan(system_id, component_id, chan, msg, opls->sec, opls->usec, opls->time, opls->ch4, opls->et, opls->h2o, opls->p, opls->t, opls->rf, opls->lon, opls->lat, opls->lsr);
 }
 
 /**
  * @brief Send a opls message
  * @param chan MAVLink channel to send the message
  *
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param time Time.
  * @param ch4 CH4.
  * @param et Et.
@@ -217,7 +237,7 @@ static inline uint16_t mavlink_msg_opls_encode_chan(uint8_t system_id, uint8_t c
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_opls_send(mavlink_channel_t chan, double time, double ch4, double et, double h2o, double p, double t, double rf, double lon, double lat, double lsr)
+static inline void mavlink_msg_opls_send(mavlink_channel_t chan, uint32_t sec, uint32_t usec, double time, double ch4, double et, double h2o, double p, double t, double rf, double lon, double lat, double lsr)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_OPLS_LEN];
@@ -231,6 +251,8 @@ static inline void mavlink_msg_opls_send(mavlink_channel_t chan, double time, do
     _mav_put_double(buf, 56, lon);
     _mav_put_double(buf, 64, lat);
     _mav_put_double(buf, 72, lsr);
+    _mav_put_uint32_t(buf, 80, sec);
+    _mav_put_uint32_t(buf, 84, usec);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OPLS, buf, MAVLINK_MSG_ID_OPLS_MIN_LEN, MAVLINK_MSG_ID_OPLS_LEN, MAVLINK_MSG_ID_OPLS_CRC);
 #else
@@ -245,6 +267,8 @@ static inline void mavlink_msg_opls_send(mavlink_channel_t chan, double time, do
     packet.lon = lon;
     packet.lat = lat;
     packet.lsr = lsr;
+    packet.sec = sec;
+    packet.usec = usec;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OPLS, (const char *)&packet, MAVLINK_MSG_ID_OPLS_MIN_LEN, MAVLINK_MSG_ID_OPLS_LEN, MAVLINK_MSG_ID_OPLS_CRC);
 #endif
@@ -258,7 +282,7 @@ static inline void mavlink_msg_opls_send(mavlink_channel_t chan, double time, do
 static inline void mavlink_msg_opls_send_struct(mavlink_channel_t chan, const mavlink_opls_t* opls)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_opls_send(chan, opls->time, opls->ch4, opls->et, opls->h2o, opls->p, opls->t, opls->rf, opls->lon, opls->lat, opls->lsr);
+    mavlink_msg_opls_send(chan, opls->sec, opls->usec, opls->time, opls->ch4, opls->et, opls->h2o, opls->p, opls->t, opls->rf, opls->lon, opls->lat, opls->lsr);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OPLS, (const char *)opls, MAVLINK_MSG_ID_OPLS_MIN_LEN, MAVLINK_MSG_ID_OPLS_LEN, MAVLINK_MSG_ID_OPLS_CRC);
 #endif
@@ -272,7 +296,7 @@ static inline void mavlink_msg_opls_send_struct(mavlink_channel_t chan, const ma
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_opls_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  double time, double ch4, double et, double h2o, double p, double t, double rf, double lon, double lat, double lsr)
+static inline void mavlink_msg_opls_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint32_t sec, uint32_t usec, double time, double ch4, double et, double h2o, double p, double t, double rf, double lon, double lat, double lsr)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
@@ -286,6 +310,8 @@ static inline void mavlink_msg_opls_send_buf(mavlink_message_t *msgbuf, mavlink_
     _mav_put_double(buf, 56, lon);
     _mav_put_double(buf, 64, lat);
     _mav_put_double(buf, 72, lsr);
+    _mav_put_uint32_t(buf, 80, sec);
+    _mav_put_uint32_t(buf, 84, usec);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OPLS, buf, MAVLINK_MSG_ID_OPLS_MIN_LEN, MAVLINK_MSG_ID_OPLS_LEN, MAVLINK_MSG_ID_OPLS_CRC);
 #else
@@ -300,6 +326,8 @@ static inline void mavlink_msg_opls_send_buf(mavlink_message_t *msgbuf, mavlink_
     packet->lon = lon;
     packet->lat = lat;
     packet->lsr = lsr;
+    packet->sec = sec;
+    packet->usec = usec;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OPLS, (const char *)packet, MAVLINK_MSG_ID_OPLS_MIN_LEN, MAVLINK_MSG_ID_OPLS_LEN, MAVLINK_MSG_ID_OPLS_CRC);
 #endif
@@ -310,6 +338,26 @@ static inline void mavlink_msg_opls_send_buf(mavlink_message_t *msgbuf, mavlink_
 
 // MESSAGE OPLS UNPACKING
 
+
+/**
+ * @brief Get field sec from opls message
+ *
+ * @return Epoch number of seconds.
+ */
+static inline uint32_t mavlink_msg_opls_get_sec(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint32_t(msg,  80);
+}
+
+/**
+ * @brief Get field usec from opls message
+ *
+ * @return Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
+ */
+static inline uint32_t mavlink_msg_opls_get_usec(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint32_t(msg,  84);
+}
 
 /**
  * @brief Get field time from opls message
@@ -430,6 +478,8 @@ static inline void mavlink_msg_opls_decode(const mavlink_message_t* msg, mavlink
     opls->lon = mavlink_msg_opls_get_lon(msg);
     opls->lat = mavlink_msg_opls_get_lat(msg);
     opls->lsr = mavlink_msg_opls_get_lsr(msg);
+    opls->sec = mavlink_msg_opls_get_sec(msg);
+    opls->usec = mavlink_msg_opls_get_usec(msg);
 #else
         uint8_t len = msg->len < MAVLINK_MSG_ID_OPLS_LEN? msg->len : MAVLINK_MSG_ID_OPLS_LEN;
         memset(opls, 0, MAVLINK_MSG_ID_OPLS_LEN);

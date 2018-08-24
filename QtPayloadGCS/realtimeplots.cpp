@@ -106,8 +106,19 @@ void RealTimePlots::config() {
     lidarStop();
     pyranometerStop();
     recordAll = false;
+    firstDataReceived = true;
 
     emit begin();
+}
+
+void RealTimePlots::setStartTime( unsigned int _startSec ) {
+    startSec = _startSec;
+}
+
+void RealTimePlots::setTime( unsigned int _currSec, unsigned int _uSec ) {
+    currSec  = _currSec - startSec;
+    uSec     = _uSec;
+    currTime = (double)currSec + (double)uSec / (double)1e6;
 }
 
 void RealTimePlots::lidarSetData( double _distance ) {
@@ -160,76 +171,99 @@ void RealTimePlots::initData() {
 
 void RealTimePlots::dataSlot()
 {
-  static QTime time(QTime::currentTime());
-  // calculate two new data points:
-  double key = time.elapsed()/1000.0; // time elapsed since start of demo, in seconds
-  static double lastPointKey = 0;
-  if (key-lastPointKey > 0.002) // at most add point every 2 ms
-  {
     // add data to lines:
-      switch( serial->getMsgID() ) {
-        case MAVLINK_MSG_ID_LIDAR:
-          lidarSetData( serial->li.distance );
-          ui->lidarPlot->graph(0)->addData(key, distance );
-          // rescale value (vertical) axis to fit the current data:
-          //ui->lidarPlot->graph(0)->rescaleValueAxis();
-          ui->lidarPlot->xAxis->setRange(key, 8, Qt::AlignRight);
-          ui->lidarPlot->replot();
-          ui->lidarLcd->display( distance );
-          if( recordAll )
-              *out << "LI," << key << "," << distance << endl;
-          lastPointKey = key;
-        break;
-        case MAVLINK_MSG_ID_WIND_SENSOR:
-            windSetData( serial->ws.wind_speed, serial->ws.angle, serial->ws.temperature );
-            /*ui->lidarPlot->graph(0)->addData(key, windSpeed );
-            // rescale value (vertical) axis to fit the current data:*/
-            ui->windSensorPlot->graph(0)->rescaleValueAxis();
-            arrow->end->setCoords( - windSpeed * sin( windAngle * M_PI / 180 ), - windSpeed * cos( windAngle * M_PI / 180 ) );
-            ui->windSensorPlot->replot();
-            ui->windSpeedLcd->display( windSpeed );
-            ui->windAngleLcd->display( windAngle );
-            ui->windTemperatureLcd->display( temperature );
-            if( recordAll )
-                *out << "WS," << key << "," << windAngle << "," << windSpeed << "," << temperature <<  endl;
-            lastPointKey = key;
-        break;
-        case MAVLINK_MSG_ID_PYRANOMETER:
-          pyranometerSetData( serial->py.solarIrradiance );
-          ui->pyranometerPlot->graph(0)->addData(key, solarIrradiance );
-          // rescale value (vertical) axis to fit the current data:
-          //ui->pyranometerPlot->graph(0)->rescaleValueAxis();
-          ui->pyranometerPlot->xAxis->setRange(key, 8, Qt::AlignRight);
-          ui->pyranometerPlot->replot();
-          ui->pyranometerLcd->display(solarIrradiance );
-          if( recordAll )
-              *out << "PY," << key << "," << solarIrradiance << endl;
-          lastPointKey = key;
-        break;
-        case MAVLINK_MSG_ID_OPLS:
-          oplsSetData( serial->op.time, serial->op.ch4 * 1e6, serial->op.et * 1e6 );
-          ui->oplsPlot->graph(0)->addData( key, methane );
-          ui->oplsPlot->graph(1)->addData( key, ethane );
-          // rescale value (vertical) axis to fit the current data:
-          //ui->oplsPlot->graph(0)->rescaleValueAxis();
-          ui->oplsPlot->xAxis->setRange(key, 8, Qt::AlignRight);
-          ui->oplsPlot->replot();
-          ui->methaneLcd->display( methane );
-          ui->ethaneLcd->display( ethane );
-          if( recordAll )
-              *out << "OP," << oplsTime << "," << methane << "," << ethane << endl;
-          lastPointKey = key;
-        break;
-      }
-  }
+    switch( serial->getMsgID() ) {
+      case MAVLINK_MSG_ID_LIDAR:
+        if( firstDataReceived ) {
+            setStartTime( serial->li.sec );
+            setTime( serial->li.sec, serial->li.usec );
+            firstDataReceived = false;
+        } else {
+            setTime( serial->li.sec, serial->li.usec );
+        }
+
+        lidarSetData( serial->li.distance );
+        ui->lidarPlot->graph(0)->addData(currTime, distance );
+        // rescale value (vertical) axis to fit the current data:
+        //ui->lidarPlot->graph(0)->rescaleValueAxis();
+        ui->lidarPlot->xAxis->setRange(currTime, 8, Qt::AlignRight);
+        ui->lidarPlot->replot();
+        ui->lidarLcd->display( distance );
+        cout << "LI " << currTime << " " << distance << endl;
+        if( recordAll )
+            *out << "LI," << currTime << "," << distance << endl;
+      break;
+      case MAVLINK_MSG_ID_WIND_SENSOR:
+        if( firstDataReceived ) {
+            setStartTime( serial->li.sec );
+            setTime( serial->li.sec, serial->li.usec );
+            firstDataReceived = false;
+        } else {
+            setTime( serial->li.sec, serial->li.usec );
+        }
+
+        windSetData( serial->ws.wind_speed, serial->ws.angle, serial->ws.temperature );
+        // rescale value (vertical) axis to fit the current data:*/
+        ui->windSensorPlot->graph(0)->rescaleValueAxis();
+        arrow->end->setCoords( - windSpeed * sin( windAngle * M_PI / 180 ), - windSpeed * cos( windAngle * M_PI / 180 ) );
+        ui->windSensorPlot->replot();
+        ui->windSpeedLcd->display( windSpeed );
+        ui->windAngleLcd->display( windAngle );
+        ui->windTemperatureLcd->display( temperature );
+        cout << "WS " << currTime << " " << windAngle << " " << windSpeed << endl;
+        if( recordAll )
+            *out << "WS," << currTime << "," << windAngle << "," << windSpeed << "," << temperature <<  endl;
+      break;
+      case MAVLINK_MSG_ID_PYRANOMETER:
+        if( firstDataReceived ) {
+            setStartTime( serial->li.sec );
+            setTime( serial->li.sec, serial->li.usec );
+            firstDataReceived = false;
+        } else {
+            setTime( serial->li.sec, serial->li.usec );
+        }
+
+        pyranometerSetData( serial->py.solarIrradiance );
+        ui->pyranometerPlot->graph(0)->addData(currTime, solarIrradiance );
+        // rescale value (vertical) axis to fit the current data:
+        //ui->pyranometerPlot->graph(0)->rescaleValueAxis();
+        ui->pyranometerPlot->xAxis->setRange(currTime, 8, Qt::AlignRight);
+        ui->pyranometerPlot->replot();
+        ui->pyranometerLcd->display(solarIrradiance );
+        cout << "PY " << currTime << " " << solarIrradiance << endl;
+        if( recordAll )
+            *out << "PY," << currTime << "," << solarIrradiance << endl;
+      break;
+      case MAVLINK_MSG_ID_OPLS:
+        if( firstDataReceived ) {
+            setStartTime( serial->li.sec );
+            setTime( serial->li.sec, serial->li.usec );
+            firstDataReceived = false;
+        } else {
+            setTime( serial->li.sec, serial->li.usec );
+        }
+
+       oplsSetData( serial->op.time, serial->op.ch4 * 1e6, serial->op.et * 1e6 );
+       ui->oplsPlot->graph(0)->addData( currTime, methane );
+       ui->oplsPlot->graph(1)->addData( currTime, ethane );
+       // rescale value (vertical) axis to fit the current data:
+       //ui->oplsPlot->graph(0)->rescaleValueAxis();
+       ui->oplsPlot->xAxis->setRange(currTime, 8, Qt::AlignRight);
+       ui->oplsPlot->replot();
+       ui->methaneLcd->display( methane );
+       ui->ethaneLcd->display( ethane );
+       cout << "OP " << currTime << " " << methane << " " << ethane << endl;
+       if( recordAll )
+           *out << "OP," << currTime << "," << methane << "," << ethane << endl;
+     break;
+   }
 }
 
 void RealTimePlots::createLogFile() {
     QString filename;
-    time_t t = time( nullptr );
 
     filename += "../QtPayloadGCS/LogFiles/DataLog_";
-    filename += to_string( t ).c_str();
+    filename += to_string( startSec ).c_str();
     filename += ".csv";
     dataLogFile = new QFile( filename );
 

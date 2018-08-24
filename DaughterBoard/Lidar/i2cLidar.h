@@ -69,7 +69,7 @@ void i2cLidar::measure() {
 	char tmp[] = { 1 };
 	while( ( tmp[ 0 ] & 1 ) != 0 ) {
 		bcm2835_i2c_read( tmp, 1 );
-		usleep( 100000 );
+		usleep( 50000 );
 	}
 	
 	// Read distance measurement high byte

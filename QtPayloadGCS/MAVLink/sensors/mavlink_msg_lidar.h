@@ -5,17 +5,19 @@
 
 MAVPACKED(
 typedef struct __mavlink_lidar_t {
+ uint32_t sec; /*< Epoch number of seconds.*/
+ uint32_t usec; /*< Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision*/
  uint16_t distance; /*< The distance measured by the Lidar (in cm).*/
  uint8_t status; /*< Status of the Lidar. 0 indicates on and 0xFF indicates off.*/
 }) mavlink_lidar_t;
 
-#define MAVLINK_MSG_ID_LIDAR_LEN 3
-#define MAVLINK_MSG_ID_LIDAR_MIN_LEN 3
-#define MAVLINK_MSG_ID_152_LEN 3
-#define MAVLINK_MSG_ID_152_MIN_LEN 3
+#define MAVLINK_MSG_ID_LIDAR_LEN 11
+#define MAVLINK_MSG_ID_LIDAR_MIN_LEN 11
+#define MAVLINK_MSG_ID_152_LEN 11
+#define MAVLINK_MSG_ID_152_MIN_LEN 11
 
-#define MAVLINK_MSG_ID_LIDAR_CRC 86
-#define MAVLINK_MSG_ID_152_CRC 86
+#define MAVLINK_MSG_ID_LIDAR_CRC 14
+#define MAVLINK_MSG_ID_152_CRC 14
 
 
 
@@ -23,17 +25,21 @@ typedef struct __mavlink_lidar_t {
 #define MAVLINK_MESSAGE_INFO_LIDAR { \
     152, \
     "LIDAR", \
-    2, \
-    {  { "distance", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_lidar_t, distance) }, \
-         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_lidar_t, status) }, \
+    4, \
+    {  { "sec", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_lidar_t, sec) }, \
+         { "usec", NULL, MAVLINK_TYPE_UINT32_T, 0, 4, offsetof(mavlink_lidar_t, usec) }, \
+         { "distance", NULL, MAVLINK_TYPE_UINT16_T, 0, 8, offsetof(mavlink_lidar_t, distance) }, \
+         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 10, offsetof(mavlink_lidar_t, status) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_LIDAR { \
     "LIDAR", \
-    2, \
-    {  { "distance", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_lidar_t, distance) }, \
-         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_lidar_t, status) }, \
+    4, \
+    {  { "sec", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_lidar_t, sec) }, \
+         { "usec", NULL, MAVLINK_TYPE_UINT32_T, 0, 4, offsetof(mavlink_lidar_t, usec) }, \
+         { "distance", NULL, MAVLINK_TYPE_UINT16_T, 0, 8, offsetof(mavlink_lidar_t, distance) }, \
+         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 10, offsetof(mavlink_lidar_t, status) }, \
          } \
 }
 #endif
@@ -44,21 +50,27 @@ typedef struct __mavlink_lidar_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param distance The distance measured by the Lidar (in cm).
  * @param status Status of the Lidar. 0 indicates on and 0xFF indicates off.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_lidar_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint16_t distance, uint8_t status)
+                               uint32_t sec, uint32_t usec, uint16_t distance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_LIDAR_LEN];
-    _mav_put_uint16_t(buf, 0, distance);
-    _mav_put_uint8_t(buf, 2, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_uint16_t(buf, 8, distance);
+    _mav_put_uint8_t(buf, 10, status);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_LIDAR_LEN);
 #else
     mavlink_lidar_t packet;
+    packet.sec = sec;
+    packet.usec = usec;
     packet.distance = distance;
     packet.status = status;
 
@@ -75,22 +87,28 @@ static inline uint16_t mavlink_msg_lidar_pack(uint8_t system_id, uint8_t compone
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param distance The distance measured by the Lidar (in cm).
  * @param status Status of the Lidar. 0 indicates on and 0xFF indicates off.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_lidar_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint16_t distance,uint8_t status)
+                                   uint32_t sec,uint32_t usec,uint16_t distance,uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_LIDAR_LEN];
-    _mav_put_uint16_t(buf, 0, distance);
-    _mav_put_uint8_t(buf, 2, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_uint16_t(buf, 8, distance);
+    _mav_put_uint8_t(buf, 10, status);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_LIDAR_LEN);
 #else
     mavlink_lidar_t packet;
+    packet.sec = sec;
+    packet.usec = usec;
     packet.distance = distance;
     packet.status = status;
 
@@ -111,7 +129,7 @@ static inline uint16_t mavlink_msg_lidar_pack_chan(uint8_t system_id, uint8_t co
  */
 static inline uint16_t mavlink_msg_lidar_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_lidar_t* lidar)
 {
-    return mavlink_msg_lidar_pack(system_id, component_id, msg, lidar->distance, lidar->status);
+    return mavlink_msg_lidar_pack(system_id, component_id, msg, lidar->sec, lidar->usec, lidar->distance, lidar->status);
 }
 
 /**
@@ -125,28 +143,34 @@ static inline uint16_t mavlink_msg_lidar_encode(uint8_t system_id, uint8_t compo
  */
 static inline uint16_t mavlink_msg_lidar_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_lidar_t* lidar)
 {
-    return mavlink_msg_lidar_pack_chan(system_id, component_id, chan, msg, lidar->distance, lidar->status);
+    return mavlink_msg_lidar_pack_chan(system_id, component_id, chan, msg, lidar->sec, lidar->usec, lidar->distance, lidar->status);
 }
 
 /**
  * @brief Send a lidar message
  * @param chan MAVLink channel to send the message
  *
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param distance The distance measured by the Lidar (in cm).
  * @param status Status of the Lidar. 0 indicates on and 0xFF indicates off.
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_lidar_send(mavlink_channel_t chan, uint16_t distance, uint8_t status)
+static inline void mavlink_msg_lidar_send(mavlink_channel_t chan, uint32_t sec, uint32_t usec, uint16_t distance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_LIDAR_LEN];
-    _mav_put_uint16_t(buf, 0, distance);
-    _mav_put_uint8_t(buf, 2, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_uint16_t(buf, 8, distance);
+    _mav_put_uint8_t(buf, 10, status);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_LIDAR, buf, MAVLINK_MSG_ID_LIDAR_MIN_LEN, MAVLINK_MSG_ID_LIDAR_LEN, MAVLINK_MSG_ID_LIDAR_CRC);
 #else
     mavlink_lidar_t packet;
+    packet.sec = sec;
+    packet.usec = usec;
     packet.distance = distance;
     packet.status = status;
 
@@ -162,7 +186,7 @@ static inline void mavlink_msg_lidar_send(mavlink_channel_t chan, uint16_t dista
 static inline void mavlink_msg_lidar_send_struct(mavlink_channel_t chan, const mavlink_lidar_t* lidar)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_lidar_send(chan, lidar->distance, lidar->status);
+    mavlink_msg_lidar_send(chan, lidar->sec, lidar->usec, lidar->distance, lidar->status);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_LIDAR, (const char *)lidar, MAVLINK_MSG_ID_LIDAR_MIN_LEN, MAVLINK_MSG_ID_LIDAR_LEN, MAVLINK_MSG_ID_LIDAR_CRC);
 #endif
@@ -176,16 +200,20 @@ static inline void mavlink_msg_lidar_send_struct(mavlink_channel_t chan, const m
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_lidar_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint16_t distance, uint8_t status)
+static inline void mavlink_msg_lidar_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint32_t sec, uint32_t usec, uint16_t distance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
-    _mav_put_uint16_t(buf, 0, distance);
-    _mav_put_uint8_t(buf, 2, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_uint16_t(buf, 8, distance);
+    _mav_put_uint8_t(buf, 10, status);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_LIDAR, buf, MAVLINK_MSG_ID_LIDAR_MIN_LEN, MAVLINK_MSG_ID_LIDAR_LEN, MAVLINK_MSG_ID_LIDAR_CRC);
 #else
     mavlink_lidar_t *packet = (mavlink_lidar_t *)msgbuf;
+    packet->sec = sec;
+    packet->usec = usec;
     packet->distance = distance;
     packet->status = status;
 
@@ -200,13 +228,33 @@ static inline void mavlink_msg_lidar_send_buf(mavlink_message_t *msgbuf, mavlink
 
 
 /**
+ * @brief Get field sec from lidar message
+ *
+ * @return Epoch number of seconds.
+ */
+static inline uint32_t mavlink_msg_lidar_get_sec(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint32_t(msg,  0);
+}
+
+/**
+ * @brief Get field usec from lidar message
+ *
+ * @return Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
+ */
+static inline uint32_t mavlink_msg_lidar_get_usec(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint32_t(msg,  4);
+}
+
+/**
  * @brief Get field distance from lidar message
  *
  * @return The distance measured by the Lidar (in cm).
  */
 static inline uint16_t mavlink_msg_lidar_get_distance(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint16_t(msg,  0);
+    return _MAV_RETURN_uint16_t(msg,  8);
 }
 
 /**
@@ -216,7 +264,7 @@ static inline uint16_t mavlink_msg_lidar_get_distance(const mavlink_message_t* m
  */
 static inline uint8_t mavlink_msg_lidar_get_status(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  2);
+    return _MAV_RETURN_uint8_t(msg,  10);
 }
 
 /**
@@ -228,6 +276,8 @@ static inline uint8_t mavlink_msg_lidar_get_status(const mavlink_message_t* msg)
 static inline void mavlink_msg_lidar_decode(const mavlink_message_t* msg, mavlink_lidar_t* lidar)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    lidar->sec = mavlink_msg_lidar_get_sec(msg);
+    lidar->usec = mavlink_msg_lidar_get_usec(msg);
     lidar->distance = mavlink_msg_lidar_get_distance(msg);
     lidar->status = mavlink_msg_lidar_get_status(msg);
 #else

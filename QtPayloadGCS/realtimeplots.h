@@ -32,6 +32,8 @@ private slots:
 
 private:
       void config();
+      void setStartTime( unsigned int _startSec );
+      void setTime( unsigned int _currSec, unsigned int _uSec );
       void initData();
       void lidarSetData( double _distance );
       void windSetData( double _windSpeed, int _windAngle, double _temperature );
@@ -39,8 +41,11 @@ private:
       void oplsSetData( double _oplsTime, double _methane, double _ethane );
 
       bool recordAll, recordLidar, recordPyranometer;
+      bool firstDataReceived;
       double distance, windSpeed, temperature, solarIrradiance, oplsTime, methane, ethane;
       int windAngle;
+      unsigned int startSec, currSec, uSec;
+      double currTime;
       Serial_Port *serial;
       QThread serialThread;
       Ui::MainWindow *ui;

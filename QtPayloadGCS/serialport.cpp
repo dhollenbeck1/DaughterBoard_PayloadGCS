@@ -559,19 +559,19 @@ void Serial_Port::receiveData() {
             switch( msg.msgid ) {
                 case MAVLINK_MSG_ID_WIND_SENSOR:
                     mavlink_msg_wind_sensor_decode( &msg, &ws );
-                    cout << "WS : " << ws.angle << " " << ws.wind_speed << " " << ws.temperature << endl;
+                    //cout << "WS : " << ws.angle << " " << ws.wind_speed << " " << ws.temperature << endl;
                 break;
                 case MAVLINK_MSG_ID_LIDAR:
                     mavlink_msg_lidar_decode( &msg, &li );
-                    cout << "LI : " << li.distance << endl;
+                    //cout << "LI : " << li.distance << endl;
                 break;
                 case MAVLINK_MSG_ID_PYRANOMETER:
                     mavlink_msg_pyranometer_decode( &msg, &py );
-                    cout << "PY : " << py.solarIrradiance << endl;
+                    //cout << "PY : " << py.solarIrradiance << endl;
                 break;
                 case MAVLINK_MSG_ID_OPLS:
                     mavlink_msg_opls_decode( &msg, &op );
-                    cout << "OP : " << op.ch4 * 1e6 << " " << op.et * 1e6 << endl;
+                    //cout << "OP : " << op.ch4 * 1e6 << " " << op.et * 1e6 << endl;
                 break;
             }
             emit dataReceived();

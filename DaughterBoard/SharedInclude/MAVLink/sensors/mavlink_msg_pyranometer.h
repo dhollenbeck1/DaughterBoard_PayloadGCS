@@ -5,17 +5,19 @@
 
 MAVPACKED(
 typedef struct __mavlink_pyranometer_t {
+ uint32_t sec; /*< Epoch number of seconds.*/
+ uint32_t usec; /*< Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision*/
  float solarIrradiance; /*< The solar iradiance measured by the Pyranometer (in W.m-2).*/
  uint8_t status; /*< Status of the Pyranometer. 0 indicates on and 0xFF indicates off.*/
 }) mavlink_pyranometer_t;
 
-#define MAVLINK_MSG_ID_PYRANOMETER_LEN 5
-#define MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN 5
-#define MAVLINK_MSG_ID_153_LEN 5
-#define MAVLINK_MSG_ID_153_MIN_LEN 5
+#define MAVLINK_MSG_ID_PYRANOMETER_LEN 13
+#define MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN 13
+#define MAVLINK_MSG_ID_153_LEN 13
+#define MAVLINK_MSG_ID_153_MIN_LEN 13
 
-#define MAVLINK_MSG_ID_PYRANOMETER_CRC 57
-#define MAVLINK_MSG_ID_153_CRC 57
+#define MAVLINK_MSG_ID_PYRANOMETER_CRC 241
+#define MAVLINK_MSG_ID_153_CRC 241
 
 
 
@@ -23,17 +25,21 @@ typedef struct __mavlink_pyranometer_t {
 #define MAVLINK_MESSAGE_INFO_PYRANOMETER { \
     153, \
     "PYRANOMETER", \
-    2, \
-    {  { "solarIrradiance", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
-         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 4, offsetof(mavlink_pyranometer_t, status) }, \
+    4, \
+    {  { "sec", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_pyranometer_t, sec) }, \
+         { "usec", NULL, MAVLINK_TYPE_UINT32_T, 0, 4, offsetof(mavlink_pyranometer_t, usec) }, \
+         { "solarIrradiance", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
+         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 12, offsetof(mavlink_pyranometer_t, status) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_PYRANOMETER { \
     "PYRANOMETER", \
-    2, \
-    {  { "solarIrradiance", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
-         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 4, offsetof(mavlink_pyranometer_t, status) }, \
+    4, \
+    {  { "sec", NULL, MAVLINK_TYPE_UINT32_T, 0, 0, offsetof(mavlink_pyranometer_t, sec) }, \
+         { "usec", NULL, MAVLINK_TYPE_UINT32_T, 0, 4, offsetof(mavlink_pyranometer_t, usec) }, \
+         { "solarIrradiance", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_pyranometer_t, solarIrradiance) }, \
+         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 12, offsetof(mavlink_pyranometer_t, status) }, \
          } \
 }
 #endif
@@ -44,21 +50,27 @@ typedef struct __mavlink_pyranometer_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param solarIrradiance The solar iradiance measured by the Pyranometer (in W.m-2).
  * @param status Status of the Pyranometer. 0 indicates on and 0xFF indicates off.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_pyranometer_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               float solarIrradiance, uint8_t status)
+                               uint32_t sec, uint32_t usec, float solarIrradiance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_PYRANOMETER_LEN];
-    _mav_put_float(buf, 0, solarIrradiance);
-    _mav_put_uint8_t(buf, 4, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_float(buf, 8, solarIrradiance);
+    _mav_put_uint8_t(buf, 12, status);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_PYRANOMETER_LEN);
 #else
     mavlink_pyranometer_t packet;
+    packet.sec = sec;
+    packet.usec = usec;
     packet.solarIrradiance = solarIrradiance;
     packet.status = status;
 
@@ -75,22 +87,28 @@ static inline uint16_t mavlink_msg_pyranometer_pack(uint8_t system_id, uint8_t c
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param solarIrradiance The solar iradiance measured by the Pyranometer (in W.m-2).
  * @param status Status of the Pyranometer. 0 indicates on and 0xFF indicates off.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_pyranometer_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   float solarIrradiance,uint8_t status)
+                                   uint32_t sec,uint32_t usec,float solarIrradiance,uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_PYRANOMETER_LEN];
-    _mav_put_float(buf, 0, solarIrradiance);
-    _mav_put_uint8_t(buf, 4, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_float(buf, 8, solarIrradiance);
+    _mav_put_uint8_t(buf, 12, status);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_PYRANOMETER_LEN);
 #else
     mavlink_pyranometer_t packet;
+    packet.sec = sec;
+    packet.usec = usec;
     packet.solarIrradiance = solarIrradiance;
     packet.status = status;
 
@@ -111,7 +129,7 @@ static inline uint16_t mavlink_msg_pyranometer_pack_chan(uint8_t system_id, uint
  */
 static inline uint16_t mavlink_msg_pyranometer_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_pyranometer_t* pyranometer)
 {
-    return mavlink_msg_pyranometer_pack(system_id, component_id, msg, pyranometer->solarIrradiance, pyranometer->status);
+    return mavlink_msg_pyranometer_pack(system_id, component_id, msg, pyranometer->sec, pyranometer->usec, pyranometer->solarIrradiance, pyranometer->status);
 }
 
 /**
@@ -125,28 +143,34 @@ static inline uint16_t mavlink_msg_pyranometer_encode(uint8_t system_id, uint8_t
  */
 static inline uint16_t mavlink_msg_pyranometer_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_pyranometer_t* pyranometer)
 {
-    return mavlink_msg_pyranometer_pack_chan(system_id, component_id, chan, msg, pyranometer->solarIrradiance, pyranometer->status);
+    return mavlink_msg_pyranometer_pack_chan(system_id, component_id, chan, msg, pyranometer->sec, pyranometer->usec, pyranometer->solarIrradiance, pyranometer->status);
 }
 
 /**
  * @brief Send a pyranometer message
  * @param chan MAVLink channel to send the message
  *
+ * @param sec Epoch number of seconds.
+ * @param usec Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
  * @param solarIrradiance The solar iradiance measured by the Pyranometer (in W.m-2).
  * @param status Status of the Pyranometer. 0 indicates on and 0xFF indicates off.
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_pyranometer_send(mavlink_channel_t chan, float solarIrradiance, uint8_t status)
+static inline void mavlink_msg_pyranometer_send(mavlink_channel_t chan, uint32_t sec, uint32_t usec, float solarIrradiance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_PYRANOMETER_LEN];
-    _mav_put_float(buf, 0, solarIrradiance);
-    _mav_put_uint8_t(buf, 4, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_float(buf, 8, solarIrradiance);
+    _mav_put_uint8_t(buf, 12, status);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_PYRANOMETER, buf, MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN, MAVLINK_MSG_ID_PYRANOMETER_LEN, MAVLINK_MSG_ID_PYRANOMETER_CRC);
 #else
     mavlink_pyranometer_t packet;
+    packet.sec = sec;
+    packet.usec = usec;
     packet.solarIrradiance = solarIrradiance;
     packet.status = status;
 
@@ -162,7 +186,7 @@ static inline void mavlink_msg_pyranometer_send(mavlink_channel_t chan, float so
 static inline void mavlink_msg_pyranometer_send_struct(mavlink_channel_t chan, const mavlink_pyranometer_t* pyranometer)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_pyranometer_send(chan, pyranometer->solarIrradiance, pyranometer->status);
+    mavlink_msg_pyranometer_send(chan, pyranometer->sec, pyranometer->usec, pyranometer->solarIrradiance, pyranometer->status);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_PYRANOMETER, (const char *)pyranometer, MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN, MAVLINK_MSG_ID_PYRANOMETER_LEN, MAVLINK_MSG_ID_PYRANOMETER_CRC);
 #endif
@@ -176,16 +200,20 @@ static inline void mavlink_msg_pyranometer_send_struct(mavlink_channel_t chan, c
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_pyranometer_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  float solarIrradiance, uint8_t status)
+static inline void mavlink_msg_pyranometer_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint32_t sec, uint32_t usec, float solarIrradiance, uint8_t status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
-    _mav_put_float(buf, 0, solarIrradiance);
-    _mav_put_uint8_t(buf, 4, status);
+    _mav_put_uint32_t(buf, 0, sec);
+    _mav_put_uint32_t(buf, 4, usec);
+    _mav_put_float(buf, 8, solarIrradiance);
+    _mav_put_uint8_t(buf, 12, status);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_PYRANOMETER, buf, MAVLINK_MSG_ID_PYRANOMETER_MIN_LEN, MAVLINK_MSG_ID_PYRANOMETER_LEN, MAVLINK_MSG_ID_PYRANOMETER_CRC);
 #else
     mavlink_pyranometer_t *packet = (mavlink_pyranometer_t *)msgbuf;
+    packet->sec = sec;
+    packet->usec = usec;
     packet->solarIrradiance = solarIrradiance;
     packet->status = status;
 
@@ -200,13 +228,33 @@ static inline void mavlink_msg_pyranometer_send_buf(mavlink_message_t *msgbuf, m
 
 
 /**
+ * @brief Get field sec from pyranometer message
+ *
+ * @return Epoch number of seconds.
+ */
+static inline uint32_t mavlink_msg_pyranometer_get_sec(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint32_t(msg,  0);
+}
+
+/**
+ * @brief Get field usec from pyranometer message
+ *
+ * @return Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision
+ */
+static inline uint32_t mavlink_msg_pyranometer_get_usec(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_uint32_t(msg,  4);
+}
+
+/**
  * @brief Get field solarIrradiance from pyranometer message
  *
  * @return The solar iradiance measured by the Pyranometer (in W.m-2).
  */
 static inline float mavlink_msg_pyranometer_get_solarIrradiance(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_float(msg,  0);
+    return _MAV_RETURN_float(msg,  8);
 }
 
 /**
@@ -216,7 +264,7 @@ static inline float mavlink_msg_pyranometer_get_solarIrradiance(const mavlink_me
  */
 static inline uint8_t mavlink_msg_pyranometer_get_status(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  4);
+    return _MAV_RETURN_uint8_t(msg,  12);
 }
 
 /**
@@ -228,6 +276,8 @@ static inline uint8_t mavlink_msg_pyranometer_get_status(const mavlink_message_t
 static inline void mavlink_msg_pyranometer_decode(const mavlink_message_t* msg, mavlink_pyranometer_t* pyranometer)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    pyranometer->sec = mavlink_msg_pyranometer_get_sec(msg);
+    pyranometer->usec = mavlink_msg_pyranometer_get_usec(msg);
     pyranometer->solarIrradiance = mavlink_msg_pyranometer_get_solarIrradiance(msg);
     pyranometer->status = mavlink_msg_pyranometer_get_status(msg);
 #else

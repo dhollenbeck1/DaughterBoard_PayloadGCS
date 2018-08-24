@@ -9,7 +9,6 @@
 		</message>
 		<message id="150" name="CONFIG">
 			<description>This message contains all the configuration parameters for the daughterboard's sensors.</description>
-
 			<field type="uint8_t" name="windSensorStatus">Tells whether the Wind Sensor is (1) or is not (0) used in the current configuration.</field>
 			<field type="uint8_t" name="windSensorType">The type of wind sensor used: 0 (FT205), 1 (FT742) or 2 (Trisonica).</field>
             <field type="uint8_t" name="windSensorComPortNum">The serial port number for the wind sensor.</field>
@@ -20,6 +19,8 @@
 		</message>
 		<message id="151" name="WIND_SENSOR">
 			<description>This message encodes all of the wind sensor data from the daughter board.</description>
+			<field type="uint32_t" name="sec">Epoch number of seconds.</field>
+			<field type="uint32_t" name="usec">Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision</field>
 			<field type="uint16_t" name="angle">The angle from the wind (in degrees).</field>
 			<field type="float" name="wind_speed">The speed of the wind for the specified angle (in m/s).</field>
 			<field type="float" name="temperature">The temperature measured by the Trisonica sensor (in degree Celsius).</field>
@@ -27,16 +28,22 @@
 		</message>
 		<message id="152" name="LIDAR">
 			<description>This message encodes all of the lidar data from the daughter board.</description>
+			<field type="uint32_t" name="sec">Epoch number of seconds.</field>
+			<field type="uint32_t" name="usec">Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision</field>
 			<field type="uint16_t" name="distance">The distance measured by the Lidar (in cm).</field>
 			<field type="uint8_t" name="status">Status of the Lidar. 0 indicates on and 0xFF indicates off.</field>
 		</message>
 		<message id="153" name="PYRANOMETER">
 			<description>This message encodes all of the pyranometer data from the daughter board.</description>
+			<field type="uint32_t" name="sec">Epoch number of seconds.</field>
+			<field type="uint32_t" name="usec">Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision</field>
 			<field type="float" name="solarIrradiance">The solar iradiance measured by the Pyranometer (in W.m-2).</field>
 			<field type="uint8_t" name="status">Status of the Pyranometer. 0 indicates on and 0xFF indicates off.</field>
 		</message>
 		<message id="154" name="OPLS">
 			<description>This message encodes all of the OPLS data from the daughter board.</description>
+			<field type="uint32_t" name="sec">Epoch number of seconds.</field>
+			<field type="uint32_t" name="usec">Number of microseconds. usec divided by 1e6 plus sec field provides current time with microseconds precision</field>
 			<field type="double" name="time">Time.</field>
 			<field type="double" name="ch4">CH4.</field>
 			<field type="double" name="et">Et.</field>

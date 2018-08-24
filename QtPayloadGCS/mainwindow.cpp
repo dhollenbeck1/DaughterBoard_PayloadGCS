@@ -30,6 +30,7 @@ MainWindow::~MainWindow()
     delete realTimePlots;
     delete recordedPlot;
     delete ui;
+    this->close();
 }
 
 
