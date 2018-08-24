@@ -48,8 +48,8 @@ Your Daughter Board is now ready to acquire data!
 
 ## SSH over hotspot
 If you can not access the RP through monitor and mouse follow these steps. In the boot partition of the RaspberryPi SD card add the following files.
- - Need to add file called "ssh". There is no extension. 
- - Need to add file called "wpa_supplicant.conf". 
+ - Need to add en empty file called "ssh". There is no extension. 
+ - Need to add file called "wpa_supplicant.conf" filled with: 
  
  For Raspian Jessie
  
