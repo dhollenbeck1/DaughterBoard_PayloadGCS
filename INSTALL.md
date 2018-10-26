@@ -22,7 +22,7 @@ Open a terminal and type the following command lines
 		$ sudo nano /etc/rc.local
 
 - Write "sudo ./../home/pi/DaughterBoard/run.sh" in /etc/rc.local file before the "exit 0" line, then press Ctrl-X and Y to save
-- In the terminal run: 
+- To install the RTC(realtime clock) module then follow this tutorial (https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/overview) and type in the terminal: 
 
 		$ sudo nano /lib/udev/hwclock-set 
 		
@@ -31,6 +31,14 @@ and comment out these three lines:
 		#if [ -e /run/systemd/system ] ; then
 		# exit 0
 		#fi
+
+Add this line to etc/modules file (or your respective rtc module)
+
+	rtc-ds1307
+
+THen add this line to the /etc/rc.local file
+
+	sudo /bin/bash -c "echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device"
 
 The system is now ready-to-use. Reboot and you will be able to begin a data login session.
 
